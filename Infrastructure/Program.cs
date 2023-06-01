@@ -47,7 +47,7 @@ if (Helpers.IsCommandAvailable("docker") && Helpers.IsCommandAvailable("docker-c
             {
                 // Run docker-compose build and up, outputting all logs
                 Helpers.ExecuteCommand("docker-compose build");
-                Helpers.ExecuteCommand("docker-compose up", true);
+                Helpers.ExecuteCommand("docker-compose up");
             }
             break;
 

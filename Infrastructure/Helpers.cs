@@ -59,7 +59,7 @@ namespace IPVC.ESTG.ES2
             return !string.IsNullOrEmpty(output);
         }
 
-        public static void ExecuteCommand(string command, bool redirectStandardOutput = false)
+        public static void ExecuteCommand(string command, bool redirectStandardOutput = true)
         {
             ExecuteCommandInternal(command, redirectStandardOutput, returnOutput: false);
         }
