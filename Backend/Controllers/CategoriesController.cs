@@ -12,71 +12,62 @@ namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorsController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly ES2DbContext _context;
 
-        public AuthorsController(ES2DbContext context)
+        public CategoriesController(ES2DbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Authors
+        // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<dynamic>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<dynamic>>> GetCategories()
         {
-            if (_context.Authors == null)
+            if (_context.Categories == null)
             {
                 return NotFound();
             }
 
             return await _context
-                .Authors.Select(a => new
+                .Categories.Select(c => new
                 {
-                    a.Id,
-                    a.BirthDate,
-                    a.FirstName,
-                    a.LastName,
-                    Books = a.Books.Select(b => new
-                    {
-                        b.Id,
-                        b.Title,
-                        b.Status,
-                        b.PublicationYear
-                    })
+                    c.Id,
+                    c.Name,
                 }).ToListAsync();
         }
 
-        // GET: api/Authors/5
+        // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(Guid id)
+        public async Task<ActionResult<Category>> GetCategory(Guid id)
         {
-            if (_context.Authors == null)
+            if (_context.Categories == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors.FindAsync(id);
+            var category = await _context.Categories.FindAsync(id);
 
-            if (author == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return author;
+            return category;
         }
 
-        // PUT: api/Authors/5
+        // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuthor(Guid id, Author author)
+        public async Task<IActionResult> PutCategory(Guid id, Category category)
         {
-            if (id != author.Id)
+            if (id != category.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(author).State = EntityState.Modified;
+            _context.Entry(category).State = EntityState.Modified;
 
             try
             {
@@ -84,7 +75,7 @@ namespace Backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AuthorExists(id))
+                if (!CategoryExists(id))
                 {
                     return NotFound();
                 }
@@ -97,46 +88,46 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-        // POST: api/Authors
+        // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Author>> PostAuthor(Author author)
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            if (_context.Authors == null)
+            if (_context.Categories == null)
             {
                 return Problem("Entity set 'ES2DbContext.Authors'  is null.");
             }
 
-            _context.Authors.Add(author);
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
-        // DELETE: api/Authors/5
+        // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor(Guid id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            if (_context.Authors == null)
+            if (_context.Categories == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Authors.Remove(author);
+            _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool AuthorExists(Guid id)
+        private bool CategoryExists(Guid id)
         {
-            return (_context.Authors?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
