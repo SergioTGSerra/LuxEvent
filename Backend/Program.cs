@@ -1,5 +1,6 @@
 using System.Text;
 using BusinessLogic.Context;
+using BusinessLogic.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -54,6 +55,18 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder => builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
+
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CategoryService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,6 +75,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowOrigin");
 
 app.UseHttpsRedirection();
 
