@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BusinessLogic.Entities;
 
-public partial class EventTicketType
+public partial class Ticket
 {
     public Guid EventId { get; set; }
 

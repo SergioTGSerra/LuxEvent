@@ -9,5 +9,5 @@ public partial class TicketType
 
     public string Nome { get; set; } = null!;
 
-    public virtual ICollection<EventTicketType> EventTicketTypes { get; set; } = new List<EventTicketType>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

@@ -27,7 +27,7 @@ public partial class Event
 
     public virtual User? CreatedByNavigation { get; set; }
 
-    public virtual ICollection<EventTicketType> EventTicketTypes { get; set; } = new List<EventTicketType>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

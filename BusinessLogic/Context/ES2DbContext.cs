@@ -22,7 +22,7 @@ public partial class ES2DbContext : DbContext
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<EventTicketType> EventTicketTypes { get; set; }
+    public virtual DbSet<Ticket> Tickets { get; set; }
 
     public virtual DbSet<TicketType> TicketTypes { get; set; }
 
@@ -30,7 +30,7 @@ public partial class ES2DbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=15432;Database=es2;Username=es2;Password=es2;");
+        => optionsBuilder.UseNpgsql("Host=localhost;Port=15432;Database=es2;Username=es2;Password=es2");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -108,11 +108,11 @@ public partial class ES2DbContext : DbContext
                 .HasConstraintName("events_created_by_fkey");
         });
 
-        modelBuilder.Entity<EventTicketType>(entity =>
+        modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => new { e.EventId, e.TickerTypeId }).HasName("event_ticket_types_pkey");
+            entity.HasKey(e => new { e.EventId, e.TickerTypeId }).HasName("tickets_pkey");
 
-            entity.ToTable("event_ticket_types");
+            entity.ToTable("tickets");
 
             entity.Property(e => e.EventId).HasColumnName("event_id");
             entity.Property(e => e.TickerTypeId).HasColumnName("ticker_type_id");
@@ -120,22 +120,22 @@ public partial class ES2DbContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("price");
 
-            entity.HasOne(d => d.Event).WithMany(p => p.EventTicketTypes)
+            entity.HasOne(d => d.Event).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("event_ticket_types_event_id_fkey");
+                .HasConstraintName("tickets_event_id_fkey");
 
-            entity.HasOne(d => d.TickerType).WithMany(p => p.EventTicketTypes)
+            entity.HasOne(d => d.TickerType).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.TickerTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("event_ticket_types_ticker_type_id_fkey");
+                .HasConstraintName("tickets_ticker_type_id_fkey");
         });
 
         modelBuilder.Entity<TicketType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("ticket_type_pkey");
+            entity.HasKey(e => e.Id).HasName("ticket_types_pkey");
 
-            entity.ToTable("ticket_type");
+            entity.ToTable("ticket_types");
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
@@ -170,38 +170,38 @@ public partial class ES2DbContext : DbContext
 
             entity.HasMany(d => d.Activities).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
-                    "RegistrationActivity",
+                    "RegistrationsActivity",
                     r => r.HasOne<Activity>().WithMany()
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("registration_activity_activity_id_fkey"),
+                        .HasConstraintName("registrations_activities_activity_id_fkey"),
                     l => l.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("registration_activity_user_id_fkey"),
+                        .HasConstraintName("registrations_activities_user_id_fkey"),
                     j =>
                     {
-                        j.HasKey("UserId", "ActivityId").HasName("registration_activity_pkey");
-                        j.ToTable("registration_activity");
+                        j.HasKey("UserId", "ActivityId").HasName("registrations_activities_pkey");
+                        j.ToTable("registrations_activities");
                         j.IndexerProperty<Guid>("UserId").HasColumnName("user_id");
                         j.IndexerProperty<Guid>("ActivityId").HasColumnName("activity_id");
                     });
 
             entity.HasMany(d => d.EventsNavigation).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
-                    "RegistrationEvent",
+                    "RegistrationsEvent",
                     r => r.HasOne<Event>().WithMany()
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("registration_event_event_id_fkey"),
+                        .HasConstraintName("registrations_events_event_id_fkey"),
                     l => l.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("registration_event_user_id_fkey"),
+                        .HasConstraintName("registrations_events_user_id_fkey"),
                     j =>
                     {
-                        j.HasKey("UserId", "EventId").HasName("registration_event_pkey");
-                        j.ToTable("registration_event");
+                        j.HasKey("UserId", "EventId").HasName("registrations_events_pkey");
+                        j.ToTable("registrations_events");
                         j.IndexerProperty<Guid>("UserId").HasColumnName("user_id");
                         j.IndexerProperty<Guid>("EventId").HasColumnName("event_id");
                     });
