@@ -7,47 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Context;
 using BusinessLogic.Entities;
+using BusinessLogic.Services;
 
 namespace Backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    [Route("api/[controller]")]
+    public class CategoryController : ControllerBase
     {
-        private readonly ES2DbContext _context;
+        private readonly CategoryService _categoryService;
 
-        public CategoriesController(ES2DbContext context)
+        public CategoryController(CategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
-        // GET: api/Categories
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<dynamic>>> GetCategories()
-        {
-            if (_context.Categories == null)
-            {
-                return NotFound();
-            }
-
-            return await _context
-                .Categories.Select(c => new
-                {
-                    c.Id,
-                    c.Name,
-                }).ToListAsync();
-        }
-
-        // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(Guid id)
+        public async Task<ActionResult<Category>> GetCategoryById(Guid id)
         {
-            if (_context.Categories == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _categoryService.GetCategoryById(id);
 
             if (category == null)
             {
@@ -57,77 +35,52 @@ namespace Backend.Controllers
             return category;
         }
 
-        // PUT: api/Categories/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpGet]
+        public async Task<ActionResult<List<Category>>> GetAllCategories()
+        {
+            var categories = await _categoryService.GetAllCategories();
+            return categories;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Category>> CreateCategory(Category category)
+        {
+            var createdCategory = await _categoryService.CreateCategory(category);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.Id }, createdCategory);
+        }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(Guid id, Category category)
+        public async Task<IActionResult> UpdateCategory(Guid id, Category category)
         {
             if (id != category.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            var existingCategory = await _categoryService.GetCategoryById(id);
+            if (existingCategory == null)
+            {
+                return NotFound();
+            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _categoryService.UpdateCategory(category);
 
             return NoContent();
         }
 
-        // POST: api/Categories
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
-        {
-            if (_context.Categories == null)
-            {
-                return Problem("Entity set 'ES2DbContext.Authors'  is null.");
-            }
-
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
-        }
-
-        // DELETE: api/Categories/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            if (_context.Categories == null)
+            var existingCategory = await _categoryService.GetCategoryById(id);
+            if (existingCategory == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
+            await _categoryService.DeleteCategory(id);
 
             return NoContent();
         }
-
-        private bool CategoryExists(Guid id)
-        {
-            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
+
 }
