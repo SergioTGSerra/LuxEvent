@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BusinessLogic.Context;
 using BusinessLogic.Entities;
 using BusinessLogic.Services;
 
@@ -22,24 +15,22 @@ namespace Backend.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategoryById(Guid id)
-        {
-            var category = await _categoryService.GetCategoryById(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return category;
-        }
-
         [HttpGet]
         public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
             var categories = await _categoryService.GetAllCategories();
-            return categories;
+            return Ok(categories);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Category>> GetCategoryById(Guid id)
+        {
+            var category = await _categoryService.GetCategoryById(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return Ok(category);
         }
 
         [HttpPost]
@@ -50,22 +41,19 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id, Category category)
+        public async Task<ActionResult<Category>> UpdateCategory(Guid id, Category category)
         {
             if (id != category.Id)
             {
                 return BadRequest();
             }
-
             var existingCategory = await _categoryService.GetCategoryById(id);
             if (existingCategory == null)
             {
                 return NotFound();
             }
-
-            await _categoryService.UpdateCategory(category);
-
-            return NoContent();
+            var updatedCategory = await _categoryService.UpdateCategory(category);
+            return Ok(updatedCategory);
         }
 
         [HttpDelete("{id}")]
@@ -76,9 +64,7 @@ namespace Backend.Controllers
             {
                 return NotFound();
             }
-
             await _categoryService.DeleteCategory(id);
-
             return NoContent();
         }
     }

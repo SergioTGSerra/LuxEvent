@@ -14,18 +14,19 @@ public class CategoryService
         _dbContext = dbContext;
     }
 
-    public async Task<Category?> GetCategoryById(Guid id)
-    {
-        return await _dbContext.Categories.FindAsync(id);
-    }
-
     public async Task<List<Category>> GetAllCategories()
     {
         return await _dbContext.Categories.ToListAsync();
     }
 
+    public async Task<Category> GetCategoryById(Guid id)
+    {
+        return await _dbContext.Categories.FindAsync(id);
+    }
+
     public async Task<Category> CreateCategory(Category category)
     {
+        category.Id = Guid.NewGuid();
         _dbContext.Categories.Add(category);
         await _dbContext.SaveChangesAsync();
         return category;
