@@ -9,11 +9,9 @@ public partial class Activity
 
     public Guid? EventId { get; set; }
 
-    public string Nome { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public string Description { get; set; } = null!;
-
-    public DateOnly Date { get; set; }
 
     public virtual Event? Event { get; set; }
 

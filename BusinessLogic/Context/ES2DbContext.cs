@@ -30,7 +30,7 @@ public partial class ES2DbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=15432;Database=es2;Username=es2;Password=es2");
+        => optionsBuilder.UseNpgsql("Host=localhost;Port=15432;Database=es2;Username=es2;Password=es2;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,14 +48,13 @@ public partial class ES2DbContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
-            entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
             entity.Property(e => e.EventId).HasColumnName("event_id");
-            entity.Property(e => e.Nome)
+            entity.Property(e => e.Name)
                 .HasMaxLength(100)
-                .HasColumnName("nome");
+                .HasColumnName("name");
 
             entity.HasOne(d => d.Event).WithMany(p => p.Activities)
                 .HasForeignKey(d => d.EventId)
@@ -154,7 +153,6 @@ public partial class ES2DbContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
-            entity.Property(e => e.BirthDate).HasColumnName("birth_date");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
