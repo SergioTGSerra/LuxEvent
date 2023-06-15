@@ -2,5 +2,5 @@
     event_id         uuid REFERENCES events(id),
     ticket_type_id   uuid REFERENCES ticket_types(id),
     price            DECIMAL(10, 2) NOT NULL,
-    PRIMARY KEY (event_id, ticker_type_id)
+    PRIMARY KEY (event_id, ticket_type_id)
 );

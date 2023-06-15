@@ -16,4 +16,8 @@ public partial class User
     public string Email { get; set; } = null!;
 
     public virtual ICollection<Event> Events { get; set; } = new List<Event>();
+
+    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
+
+    public virtual ICollection<Event> EventsNavigation { get; set; } = new List<Event>();
 }
