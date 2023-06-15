@@ -21,8 +21,9 @@ public class UserService
     
     public async Task<User?> GetUserByUsernameAndPassword(AuthModel model)
     {
-        return await _dbContext.Users
-            .FirstOrDefaultAsync(user => user.Username == model.Username && user.Password == model.Password);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Username == model.Username);
+        if (user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Password)) return user;
+        return null;
     }
 
     public async Task<IEnumerable<User>> GetAllUsers()
@@ -32,6 +33,7 @@ public class UserService
 
     public async Task CreateUser(User user)
     {
+        user.Password = HashPassword(user.Password);
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
     }
@@ -50,5 +52,10 @@ public class UserService
             _dbContext.Users.Remove(user);
             await _dbContext.SaveChangesAsync();
         }
+    }
+    
+    public string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 }
