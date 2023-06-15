@@ -21,13 +21,7 @@ public partial class Event
 
     public Guid? CategoryId { get; set; }
 
-    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
-
     public virtual Category? Category { get; set; }
 
     public virtual User? CreatedByNavigation { get; set; }
-
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
-
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
