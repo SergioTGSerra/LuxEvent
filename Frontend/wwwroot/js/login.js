@@ -1,7 +1,7 @@
 const signIn = async () => {
     try {
         const username = document.getElementById('usernameInput').value;
-        const password = document.getElementById('passwordInput').value;
+        const password = document.getElementById('passwordInput').value
 
         const response = await axios.post('http://localhost:5052/api/Auth/token', {
             username: username,
@@ -31,3 +31,4 @@ form.addEventListener('submit', (event) => {
     event.preventDefault(); // Impede o envio padrão do formulário.
     signIn();
 });
+    

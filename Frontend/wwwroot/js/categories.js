@@ -37,11 +37,3 @@ function getCategories() {
             console.error(error);
         });
 }
-
-// Obtenha o token do cookie
-const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
-
-// Configuração do cabeçalho para incluir o token
-const headers = {
-    Authorization: `Bearer ${token}`
-};
