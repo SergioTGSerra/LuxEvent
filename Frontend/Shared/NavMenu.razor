@@ -12,6 +12,11 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
+            <NavLink class="nav-link" href="categories">
+                <span class="oi oi-plus" aria-hidden="true"></span> Categories
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
@@ -33,14 +38,9 @@
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await using var jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/checkToken.js");
-        }
+        await JsRuntime.InvokeVoidAsync("import", "./js/checkToken.js");
     }
 
-    
-    
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;

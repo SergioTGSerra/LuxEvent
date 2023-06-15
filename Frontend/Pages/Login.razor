@@ -49,9 +49,6 @@
 {
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    if (firstRender)
-    {
-      await using var jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/login.js");
-    }
+    await JsRuntime.InvokeVoidAsync("import", "./js/login.js");
   }
 }
