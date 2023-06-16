@@ -57,7 +57,7 @@ async function createUser() {
             username: userUsername,
             password: userPassword,
             email: userEmail,
-            usertype: userType
+            userType: userType
         });
 
         console.log('User created successfully:', response.data);
@@ -119,7 +119,7 @@ async function updateUser() {
             name: updatedName,
             username: updatedUsername,
             email: updatedEmail,
-            usertype: updatedUserType
+            userType: updatedUserType
         };
 
         // Make the PUT request to update the user
