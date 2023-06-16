@@ -139,9 +139,9 @@ public partial class ES2DbContext : DbContext
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
-            entity.Property(e => e.Nome)
+            entity.Property(e => e.Name)
                 .HasMaxLength(100)
-                .HasColumnName("nome");
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<User>(entity =>
