@@ -15,5 +15,5 @@ public partial class Activity
 
     public virtual Event? Event { get; set; }
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<RegistrationsActivity> RegistrationsActivities { get; set; } = new List<RegistrationsActivity>();
 }
