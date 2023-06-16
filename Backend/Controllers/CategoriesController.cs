@@ -6,11 +6,11 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _categoryService;
 
-        public CategoryController(CategoryService categoryService)
+        public CategoriesController(CategoryService categoryService)
         {
             _categoryService = categoryService;
         }

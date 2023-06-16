@@ -6,11 +6,11 @@ namespace Backend.Controllers
 {
  [ApiController]
  [Route("api/[controller]")]
- public class UserController : ControllerBase
+ public class UsersController : ControllerBase
  {
      private readonly UserService _userService;
  
-     public UserController(UserService userService)
+     public UsersController(UserService userService)
      {
          _userService = userService;
      }

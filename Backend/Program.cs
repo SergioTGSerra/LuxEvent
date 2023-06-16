@@ -67,6 +67,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<TicketTypeService>();
+builder.Services.AddScoped<EventService>();
 
 var app = builder.Build();
 
