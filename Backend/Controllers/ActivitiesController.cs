@@ -6,26 +6,26 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ActivityController : ControllerBase
+    public class ActivitiesController : ControllerBase
     {
-        private readonly ActivityService activityService;
+        private readonly ActivityService _activityService;
 
-        public ActivityController(ActivityService activityService)
+        public ActivitiesController(ActivityService activityService)
         {
-            this.activityService = activityService;
+            _activityService = activityService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<ActionResult<List<Activity>>> GetAllActivities()
         {
-            var activities = await activityService.GetActivitiesAsync();
+            var activities = await _activityService.GetAllActivitiesAsync();
             return Ok(activities);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivityById(Guid id)
         {
-            var activity = await activityService.GetActivityByIdAsync(id);
+            var activity = await _activityService.GetActivityByIdAsync(id);
             if (activity == null)
             {
                 return NotFound();
@@ -36,7 +36,7 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            await activityService.CreateActivityAsync(activity);
+            await _activityService.CreateActivityAsync(activity);
             return CreatedAtAction(nameof(GetActivityById), new { id = activity.Id }, activity);
         }
 
@@ -48,16 +48,15 @@ namespace Backend.Controllers
                 return BadRequest();
             }
 
-            await activityService.UpdateActivityAsync(activity);
+            await _activityService.UpdateActivityAsync(activity);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
-            await activityService.DeleteActivityAsync(id);
+            await _activityService.DeleteActivityAsync(id);
             return NoContent();
         }
     }
-
 }

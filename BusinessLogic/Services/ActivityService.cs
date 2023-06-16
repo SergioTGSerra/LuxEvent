@@ -6,42 +6,42 @@ namespace BusinessLogic.Services;
 
 public class ActivityService
 {
-    private readonly ES2DbContext dbContext;
+    private readonly ES2DbContext _dbContext;
 
     public ActivityService(ES2DbContext dbContext)
     {
-        this.dbContext = dbContext;
+        _dbContext = dbContext;
     }
 
-    public async Task<List<Activity>> GetActivitiesAsync()
+    public async Task<List<Activity>> GetAllActivitiesAsync()
     {
-        return await dbContext.Activities.ToListAsync();
+        return await _dbContext.Activities.ToListAsync();
     }
 
-    public async Task<Activity> GetActivityByIdAsync(Guid id)
+    public async Task<Activity?> GetActivityByIdAsync(Guid id)
     {
-        return await dbContext.Activities.FindAsync(id);
+        return await _dbContext.Activities.FindAsync(id);
     }
 
     public async Task CreateActivityAsync(Activity activity)
     {
-        dbContext.Activities.Add(activity);
-        await dbContext.SaveChangesAsync();
+        _dbContext.Activities.Add(activity);
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateActivityAsync(Activity activity)
     {
-        dbContext.Entry(activity).State = EntityState.Modified;
-        await dbContext.SaveChangesAsync();
+        _dbContext.Entry(activity).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteActivityAsync(Guid id)
     {
-        var activity = await dbContext.Activities.FindAsync(id);
+        var activity = await _dbContext.Activities.FindAsync(id);
         if (activity != null)
         {
-            dbContext.Activities.Remove(activity);
-            await dbContext.SaveChangesAsync();
+            _dbContext.Activities.Remove(activity);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
