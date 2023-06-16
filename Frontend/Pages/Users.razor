@@ -1,0 +1,105 @@
+@page "/Users"
+<h3>Users</h3>
+@inject IJSRuntime JsRuntime
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Add User
+</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">User Type</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="userNameInput" class="form-label">Name</label>
+            <input type="text" class="form-control" id="userNameInput">
+          </div>
+          <div class="mb-3">
+            <label for="userUsernameInput" class="form-label">Username</label>
+            <input type="text" class="form-control" id="userUsernameInput">
+          </div>
+          <div class="mb-3">
+            <label for="userPasswordInput" class="form-label">Password</label>
+            <input type="password" class="form-control" id="userPasswordInput">
+          </div>
+          <div class="mb-3">
+            <label for="userEmailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="userEmailInput">
+          </div>
+          <div class="mb-3">
+            <label for="userTypeInput" class="form-label">User Type</label>
+            <input type="text" class="form-control" id="userTypeInput">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="createUser()">Create User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editUserModalLabel">Edit User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="editUserNameInput" class="form-label">Name</label>
+            <input type="text" class="form-control" id="editUserNameInput">
+          </div>
+          <div class="mb-3">
+            <label for="editUserUsernameInput" class="form-label">Username</label>
+            <input type="text" class="form-control" id="editUserUsernameInput">
+          </div>
+          <div class="mb-3">
+            <label for="editUserEmailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="editUserEmailInput">
+          </div>
+          <div class="mb-3">
+            <label for="editUserTypeInput" class="form-label">User Type</label>
+            <input type="text" class="form-control" id="editUserTypeInput">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="updateUser()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code
+{
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await JsRuntime.InvokeVoidAsync("getUsers");
+  }
+}
