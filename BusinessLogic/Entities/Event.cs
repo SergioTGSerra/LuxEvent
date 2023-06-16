@@ -11,11 +11,11 @@ public partial class Event
 
     public string Description { get; set; } = null!;
 
-    public DateOnly Date { get; set; }
+    public DateOnly EventDate { get; set; }
 
-    public string Local { get; set; } = null!;
+    public string Location { get; set; } = null!;
 
-    public int Maxparticipants { get; set; }
+    public int MaxParticipants { get; set; }
 
     public Guid? CreatedBy { get; set; }
 

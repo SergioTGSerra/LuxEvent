@@ -86,14 +86,14 @@ public partial class ES2DbContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
-            entity.Property(e => e.Local)
+            entity.Property(e => e.EventDate).HasColumnName("event_date");
+            entity.Property(e => e.Location)
                 .HasMaxLength(255)
-                .HasColumnName("local");
-            entity.Property(e => e.Maxparticipants).HasColumnName("maxparticipants");
+                .HasColumnName("location");
+            entity.Property(e => e.MaxParticipants).HasColumnName("max_participants");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
@@ -162,12 +162,12 @@ public partial class ES2DbContext : DbContext
             entity.Property(e => e.Password)
                 .HasMaxLength(100)
                 .HasColumnName("password");
+            entity.Property(e => e.UserType)
+                .HasMaxLength(100)
+                .HasColumnName("user_type");
             entity.Property(e => e.Username)
                 .HasMaxLength(100)
                 .HasColumnName("username");
-            entity.Property(e => e.Usertype)
-                .HasMaxLength(100)
-                .HasColumnName("usertype");
 
             entity.HasMany(d => d.Activities).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(

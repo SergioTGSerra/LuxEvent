@@ -4,5 +4,5 @@ CREATE TABLE users (
      username       VARCHAR(100) NOT NULL,
      password       VARCHAR(100) NOT NULL,
      email          VARCHAR(100) NOT NULL,
-     userType       VARCHAR(100) NOT NULL
+     user_type       VARCHAR(100) NOT NULL
 );
