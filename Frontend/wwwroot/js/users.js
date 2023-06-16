@@ -34,8 +34,8 @@ function getUsers() {
                 nameCell.textContent = item.name;
                 usernameCell.textContent = item.username;
                 emailCell.textContent = item.email;
-                userTypeCell.textContent = item.usertype;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalUser(\'' + item.id + '\', \'' + item.name + '\', \'' + item.username + '\', \'' + item.email + '\', \'' + item.usertype + '\')">Edit</button><button class="btn btn-danger" onclick="deleteUser(\'' + item.id + '\')">Delete</button>';
+                userTypeCell.textContent = item.userType;
+                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalUser(\'' + item.id + '\', \'' + item.name + '\', \'' + item.username + '\', \'' + item.email + '\', \'' + item.userType + '\')">Edit</button><button class="btn btn-danger" onclick="deleteUser(\'' + item.id + '\')">Delete</button>';
             });
         })
         .catch(error => {
