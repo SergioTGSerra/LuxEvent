@@ -34,9 +34,21 @@ public class CategoryService
 
     public async Task<Category> UpdateCategory(Category category)
     {
-        _dbContext.Entry(category).State = EntityState.Modified;
+        var existingCategory = await _dbContext.Categories.FindAsync(category.Id);
+
+        if (existingCategory == null)
+        {
+            // Categoria não encontrada
+            return null;
+        }
+
+        // Atualiza os campos relevantes
+        existingCategory.Name = category.Name;
+
+        // Salva as alterações no banco de dados
         await _dbContext.SaveChangesAsync();
-        return category;
+
+        return existingCategory;
     }
 
     public async Task DeleteCategory(Guid id)

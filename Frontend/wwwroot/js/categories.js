@@ -12,12 +12,7 @@ function getCategories() {
 
     // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
-
-    // Limpar os dados da tabela (remover todas as linhas)
-    while (table.tBodies[0].firstChild) {
-        table.tBodies[0].firstChild.remove();
-    }
-
+    
     // Fazendo a solicitação GET usando Axios
     axios.get(url, { headers })
         .then(response => {
@@ -34,7 +29,7 @@ function getCategories() {
 
                 // Define o conteúdo das células
                 nameCell.textContent = item.name;
-                actionsCell.innerHTML = '<button onclick="openEditModal(\'' + item.id + '\')" >Editar</button><button onclick="deleteCategory(\'' + item.id + '\')" >Excluir</button>';
+                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModal(\'' + item.id + '\', \'' + item.name + '\')">Editar</button><button class="btn btn-danger" onclick="deleteCategory(\'' + item.id + '\')">Excluir</button>';
             });
         })
         .catch(error => {
@@ -42,7 +37,6 @@ function getCategories() {
             console.error(error);
         });
 }
-
 
 async function CreateCategory() {
     const categoryName = document.getElementById('categoryNameInput').value;
@@ -64,6 +58,7 @@ async function CreateCategory() {
         console.error('Erro ao criar categoria:', error);
         alert("Erro ao criar categoria")
     }
+    location.reload();
 }
 
 async function deleteCategory(categoryId) {
@@ -92,8 +87,53 @@ async function deleteCategory(categoryId) {
         console.error('Erro ao apagar categoria:', error);
         alert("Erro ao apagar categoria");
     }
+    location.reload();
+
 }
 
-function updateCategory(){
-    alert("teste")
+async function updateCategory() {
+    // Get the category ID and updated name from the modal
+    const categoryId = document.getElementById('editCategoryModal').getAttribute('data-category-id');
+    const updatedName = document.getElementById('editCategoryNameInput').value;
+
+    try {
+        // Create the request payload
+        const data = {
+            id: categoryId,
+            name: updatedName
+        };
+
+        // Make the PUT request to update the category
+        const response = await axios.put(`http://localhost:5052/api/Category/${categoryId}`, data);
+
+        alert('Category updated successfully!');
+
+        // Close the edit modal
+        const editModal = document.getElementById('editCategoryModal');
+        const modalInstance = bootstrap.Modal.getInstance(editModal);
+        modalInstance.hide();
+
+        // Refresh the categories table
+        getCategories();
+    } catch (error) {
+        console.error('Error updating category:', error);
+        alert('Error updating category');
+    }
+    location.reload();
 }
+
+
+function openEditModal(categoryId, categoryName) {
+    // Define o valor do input da modal de edição com o nome da categoria
+    const editCategoryNameInput = document.getElementById('editCategoryNameInput');
+    editCategoryNameInput.value = categoryName;
+
+    // Define o atributo "data-category-id" na modal de edição com o ID da categoria
+    const editModal = document.getElementById('editCategoryModal');
+    editModal.setAttribute('data-category-id', categoryId);
+
+    // Abre a modal de edição usando o Bootstrap
+    const modal = new bootstrap.Modal(editModal);
+    modal.show();
+}
+

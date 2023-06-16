@@ -35,7 +35,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" @onclick="CreateCategory">Create Category</button>
+        <button type="button" class="btn btn-primary" onclick="CreateCategory()">Create Category</button>
       </div>
     </div>
   </div>
@@ -70,10 +70,5 @@
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
     await JsRuntime.InvokeVoidAsync("getCategories");
-  }
-  
-  protected async Task CreateCategory()
-  {
-    await JsRuntime.InvokeVoidAsync("CreateCategory");
   }
 }
