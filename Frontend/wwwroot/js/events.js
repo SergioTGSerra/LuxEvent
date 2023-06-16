@@ -67,7 +67,7 @@ function getEvents() {
         });
 }
 
-async function createEvent() {
+async function CreateEvent() {
     const eventName = document.getElementById('eventNameInput').value;
     const eventDescription = document.getElementById('eventDescriptionInput').value;
     const eventLocation = document.getElementById('eventLocationInput').value;
@@ -79,8 +79,8 @@ async function createEvent() {
         const response = await axios.post('http://localhost:5052/api/Events', {
             name: eventName,
             description: eventDescription,
-            local: eventLocation,
-            maxparticipants: eventMaxParticipants,
+            location: eventLocation,
+            maxParticipants: eventMaxParticipants,
             createdBy: eventCreatedBy,
             categoryId: eventCategory
         });
