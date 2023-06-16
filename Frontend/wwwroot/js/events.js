@@ -140,10 +140,36 @@ async function deleteEvent(eventId) {
 }
 
 async function updateEvent() {
-    
+    const eventId = document.getElementById('editEventModal').getAttribute('data-event-id');
+    const eventName = document.getElementById('editEventNameInput').value;
+    const eventDescription = document.getElementById('editEventDescriptionInput').value;
+    const eventLocation = document.getElementById('editEventLocationInput').value;
+    const eventMaxParticipants = document.getElementById('editEventMaxParticipantsInput').value;
+    const eventCreatedBy = document.getElementById('eventEditCreatedByInput').value;
+    const eventCategory = document.getElementById('eventEditCategoryInput').value;
+
+    try {
+        const response = await axios.put(`http://localhost:5052/api/Events/${eventId}`, {
+            id: eventId,
+            name: eventName,
+            description: eventDescription,
+            location: eventLocation,
+            maxParticipants: eventMaxParticipants,
+            createdBy: eventCreatedBy,
+            categoryId: eventCategory
+        });
+
+        console.log('Event updated successfully:', response.data);
+
+        getEvents();
+    } catch (error) {
+        console.error('Error updating event:', error);
+        alert('Error updating event');
+    }
+    location.reload();
 }
 
-function openEditModalEvents(eventId, eventName, eventDescription, eventLocation, eventMaxParticipants, eventCreatedBy, eventCategory) {
+function openEditModalEvents(eventId, eventName, eventDescription, eventLocation, eventMaxParticipants) {
 
     const categoryDropdown = document.getElementById("eventEditCategoryInput");
     axios.get("http://localhost:5052/api/Categories")
@@ -184,7 +210,7 @@ function openEditModalEvents(eventId, eventName, eventDescription, eventLocation
 
     // Define o atributo "data-category-id" na modal de edição com o ID do evento
     const editModal = document.getElementById('editEventModal');
-    editModal.setAttribute('data-category-id', eventId);
+    editModal.setAttribute('data-event-id', eventId);
 
     // Abre a modal de edição usando o Bootstrap
     const modal = new bootstrap.Modal(editModal);
