@@ -8,7 +8,7 @@ function getUsers() {
     };
 
     // API endpoint URL
-    const url = 'http://localhost:5052/api/User';
+    const url = 'http://localhost:5052/api/Users';
 
     // Select the table in the DOM
     const table = document.querySelector('.table');
@@ -52,7 +52,7 @@ async function createUser() {
     const userType = document.getElementById('userTypeInput').value;
 
     try {
-        const response = await axios.post('http://localhost:5052/api/User', {
+        const response = await axios.post('http://localhost:5052/api/Users', {
             name: userName,
             username: userUsername,
             password: userPassword,
@@ -89,7 +89,7 @@ async function deleteUser(userId) {
             Authorization: `Bearer ${token}`
         };
 
-        const url = `http://localhost:5052/api/User/${userId}`;
+        const url = `http://localhost:5052/api/Users/${userId}`;
 
         const response = await axios.delete(url, { headers });
 
@@ -123,7 +123,7 @@ async function updateUser() {
         };
 
         // Make the PUT request to update the user
-        const response = await axios.put(`http://localhost:5052/api/User/${userId}`, data);
+        const response = await axios.put(`http://localhost:5052/api/Users/${userId}`, data);
 
         alert('User updated successfully!');
 
