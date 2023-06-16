@@ -37,7 +37,7 @@ public class TicketTypeService
             throw new ArgumentException("Ticket type not found.");
         }
 
-        existingTicketType.Nome = ticketType.Nome;
+        existingTicketType.Name = ticketType.Name;
 
         await _dbContext.SaveChangesAsync();
     }

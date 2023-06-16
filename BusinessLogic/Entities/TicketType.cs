@@ -7,7 +7,7 @@ public partial class TicketType
 {
     public Guid Id { get; set; }
 
-    public string Nome { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
