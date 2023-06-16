@@ -165,6 +165,9 @@ public partial class ES2DbContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(100)
                 .HasColumnName("username");
+            entity.Property(e => e.Usertype)
+                .HasMaxLength(100)
+                .HasColumnName("usertype");
 
             entity.HasMany(d => d.Activities).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
