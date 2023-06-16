@@ -35,7 +35,7 @@ function getUsers() {
                 usernameCell.textContent = item.username;
                 emailCell.textContent = item.email;
                 userTypeCell.textContent = item.usertype;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModal(\'' + item.id + '\', \'' + item.name + '\', \'' + item.username + '\', \'' + item.email + '\', \'' + item.usertype + '\')">Edit</button><button class="btn btn-danger" onclick="deleteUser(\'' + item.id + '\')">Delete</button>';
+                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalUser(\'' + item.id + '\', \'' + item.name + '\', \'' + item.username + '\', \'' + item.email + '\', \'' + item.usertype + '\')">Edit</button><button class="btn btn-danger" onclick="deleteUser(\'' + item.id + '\')">Delete</button>';
             });
         })
         .catch(error => {
@@ -141,7 +141,7 @@ async function updateUser() {
     location.reload();
 }
 
-function openEditModal(userId, userName, userUsername, userEmail, userUserType) {
+function openEditModalUser(userId, userName, userUsername, userEmail, userUserType) {
     // Set the value of the inputs in the edit modal
     const editUserNameInput = document.getElementById('editUserNameInput');
     const editUserUsernameInput = document.getElementById('editUserUsernameInput');

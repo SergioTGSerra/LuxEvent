@@ -1,4 +1,5 @@
 function getCategories() {
+    
     // Obtenha o token do cookie
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
@@ -29,7 +30,7 @@ function getCategories() {
 
                 // Define o conteúdo das células
                 nameCell.textContent = item.name;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModal(\'' + item.id + '\', \'' + item.name + '\')">Editar</button><button class="btn btn-danger" onclick="deleteCategory(\'' + item.id + '\')">Excluir</button>';
+                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalCategory(\'' + item.id + '\', \'' + item.name + '\')">Editar</button><button class="btn btn-danger" onclick="deleteCategory(\'' + item.id + '\')">Excluir</button>';
             });
         })
         .catch(error => {
@@ -122,8 +123,7 @@ async function updateCategory() {
     location.reload();
 }
 
-
-function openEditModal(categoryId, categoryName) {
+function openEditModalCategory(categoryId, categoryName) {
     // Define o valor do input da modal de edição com o nome da categoria
     const editCategoryNameInput = document.getElementById('editCategoryNameInput');
     editCategoryNameInput.value = categoryName;
@@ -136,4 +136,3 @@ function openEditModal(categoryId, categoryName) {
     const modal = new bootstrap.Modal(editModal);
     modal.show();
 }
-

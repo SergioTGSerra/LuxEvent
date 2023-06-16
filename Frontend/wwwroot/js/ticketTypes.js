@@ -29,7 +29,7 @@ function getTicketTypes() {
 
                 // Set the content of the cells
                 nameCell.textContent = item.name;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModal(\'' + item.id + '\', \'' + item.name + '\')">Edit</button><button class="btn btn-danger" onclick="deleteTicketType(\'' + item.id + '\')">Delete</button>';
+                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalTicketType(\'' + item.id + '\', \'' + item.name + '\')">Edit</button><button class="btn btn-danger" onclick="deleteTicketType(\'' + item.id + '\')">Delete</button>';
             });
         })
         .catch(error => {
@@ -120,7 +120,7 @@ async function updateTicketType() {
     location.reload();
 }
 
-function openEditModal(ticketTypeId, ticketTypeName) {
+function openEditModalTicketType(ticketTypeId, ticketTypeName) {
     // Set the value of the input in the edit modal to the ticket type name
     const editTicketTypeNameInput = document.getElementById('editTicketTypeNameInput');
     editTicketTypeNameInput.value = ticketTypeName;
