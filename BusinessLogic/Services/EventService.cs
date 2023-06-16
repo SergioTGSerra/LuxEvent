@@ -13,54 +13,35 @@ public class EventService
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Event>> GetAllEventsAsync()
+    public async Task<List<Event>> GetEvents()
     {
-        return await _dbContext.Events
-            .Include(e => e.Category)
-            .ToListAsync();
+        return await _dbContext.Events.ToListAsync();
     }
 
-    public async Task<Event?> GetEventByIdAsync(Guid eventId)
+    public async Task<Event?> GetEventById(Guid eventId)
     {
-        return await _dbContext.Events
-            .Include(e => e.Category)
-            .FirstOrDefaultAsync(e => e.Id == eventId);
+        return await _dbContext.Events.FindAsync(eventId);
     }
 
-    public async Task<Event> CreateEvent(Event ev)
+    public async Task CreateEvent(Event newEvent)
     {
-        ev.Id = Guid.NewGuid();
-        _dbContext.Events.Add(ev);
+        _dbContext.Events.Add(newEvent);
         await _dbContext.SaveChangesAsync();
-        return ev;
     }
 
-    public async Task<bool> UpdateEventAsync(Guid eventId, Event updatedEvent)
+    public async Task UpdateEvent(Event updatedEvent)
     {
-        var existingEvent = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId);
-        if (existingEvent == null)
+        _dbContext.Entry(updatedEvent).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteEvent(Guid eventId)
+    {
+        var eventToDelete = await _dbContext.Events.FindAsync(eventId);
+        if (eventToDelete != null)
         {
-            return false;
+            _dbContext.Events.Remove(eventToDelete);
+            await _dbContext.SaveChangesAsync();
         }
-
-        existingEvent.Name = updatedEvent.Name;
-        existingEvent.Description = updatedEvent.Description;
-        // Update other properties as needed
-
-        await _dbContext.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> DeleteEventAsync(Guid eventId)
-    {
-        var existingEvent = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId);
-        if (existingEvent == null)
-        {
-            return false;
-        }
-
-        _dbContext.Events.Remove(existingEvent);
-        await _dbContext.SaveChangesAsync();
-        return true;
     }
 }
