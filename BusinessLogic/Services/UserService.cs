@@ -38,10 +38,22 @@ public class UserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateUser(User user)
+    public async Task<User> UpdateUser(UserModel userModel)
     {
-        _dbContext.Users.Update(user);
+        var existingUser = await _dbContext.Users.FindAsync(userModel.Id);
+        
+        if (existingUser == null)
+        {
+            return null;
+        }
+
+        // Atualize apenas as propriedades necessárias
+        existingUser.Name = userModel.Name;
+        existingUser.Email = userModel.Email;
+        existingUser.UserType = userModel.UserType;
+
         await _dbContext.SaveChangesAsync();
+        return existingUser;
     }
 
     public async Task DeleteUser(Guid id)

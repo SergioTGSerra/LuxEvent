@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Entities;
+using BusinessLogic.Models;
 using BusinessLogic.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,15 +43,21 @@ namespace Backend.Controllers
      }
  
      [HttpPut("{id}")]
-     public async Task<IActionResult> UpdateUser(Guid id, User user)
+     public async Task<ActionResult<User>> UpdateUser(Guid id, UserModel userModel)
      {
-         if (id != user.Id)
+         if (id != userModel.Id)
          {
              return BadRequest();
          }
+         
+         var existingUser = await _userService.GetUserById(id);
+         if (existingUser == null)
+         {
+             return NotFound();
+         }
  
-         await _userService.UpdateUser(user);
-         return NoContent();
+         var updatedUser = await _userService.UpdateUser(userModel);
+         return Ok(updatedUser);
      }
  
      [HttpDelete("{id}")]
