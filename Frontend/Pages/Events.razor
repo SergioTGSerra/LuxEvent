@@ -2,7 +2,7 @@
 <h3>Events</h3>
 @inject IJSRuntime JsRuntime
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal" onclick="openAddEventModal()">
   Add Event
 </button>
 
@@ -23,7 +23,7 @@
 </table>
 
 <!-- Add Event Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -50,11 +50,11 @@
           </div>
           <div class="mb-3">
             <label for="eventCreatedByInput" class="form-label">Created By</label>
-            <input type="text" class="form-control" id="eventCreatedByInput" aria-describedby="emailHelp">
+            <select class="form-control" id="eventCreatedByInput"></select>
           </div>
           <div class="mb-3">
             <label for="eventCategoryInput" class="form-label">Category</label>
-            <input type="text" class="form-control" id="eventCategoryInput" aria-describedby="emailHelp">
+            <select class="form-control" id="eventCategoryInput"></select>
           </div>
         </form>
       </div>
@@ -93,12 +93,12 @@
             <input type="number" class="form-control" id="editEventMaxParticipantsInput">
           </div>
           <div class="mb-3">
-            <label for="editEventCreatedByInput" class="form-label">Created By</label>
-            <input type="text" class="form-control" id="editEventCreatedByInput">
+            <label for="eventCreatedByInput" class="form-label">Created By</label>
+            <select class="form-control" id="eventEditCreatedByInput"></select>
           </div>
           <div class="mb-3">
-            <label for="editEventCategoryInput" class="form-label">Category</label>
-            <input type="text" class="form-control" id="editEventCategoryInput">
+            <label for="eventCategoryInput" class="form-label">Category</label>
+            <select class="form-control" id="eventEditCategoryInput"></select>
           </div>
         </form>
       </div>

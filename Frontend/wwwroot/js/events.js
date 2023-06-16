@@ -7,59 +7,75 @@ function getEvents() {
         Authorization: `Bearer ${token}`
     };
 
-    // Endpoint URL
-    const url = 'http://localhost:5052/api/Events';
+    // Endpoint URLs
+    const eventsUrl = 'http://localhost:5052/api/Events';
+    const usersUrl = 'http://localhost:5052/api/Users';
+    const categoriesUrl = 'http://localhost:5052/api/Categories';
 
     // Select the table in the DOM
     const table = document.querySelector('.table');
 
-    // Make a GET request using Axios
-    axios
-        .get(url, { headers })
+    // Make a GET request to fetch events using Axios
+    axios.get(eventsUrl, { headers })
         .then(response => {
             const events = response.data;
 
-            // Iterate over the returned data
-            events.forEach(event => {
-                // Create a new row in the table
-                const newRow = table.insertRow();
+            // Make parallel requests to fetch user and category details
+            const userRequest = axios.get(usersUrl, { headers });
+            const categoryRequest = axios.get(categoriesUrl, { headers });
 
-                // Create cells for each field
-                const nameCell = newRow.insertCell();
-                const descriptionCell = newRow.insertCell();
-                const locationCell = newRow.insertCell();
-                const maxParticipantsCell = newRow.insertCell();
-                const createdByCell = newRow.insertCell();
-                const categoryCell = newRow.insertCell();
-                const actionsCell = newRow.insertCell();
+            // Wait for all requests to complete
+            axios.all([userRequest, categoryRequest])
+                .then(axios.spread((userResponse, categoryResponse) => {
+                    const users = userResponse.data;
+                    const categories = categoryResponse.data;
 
-                // Set the content of each cell
-                nameCell.textContent = event.name;
-                descriptionCell.textContent = event.description;
-                locationCell.textContent = event.location;
-                maxParticipantsCell.textContent = event.maxParticipants;
-                createdByCell.textContent = event.createdBy;
-                categoryCell.textContent = event.categoryId;
+                    // Iterate over the returned data
+                    events.forEach(event => {
+                        // Find the corresponding user and category by their IDs
+                        const user = users.find(user => user.id === event.createdBy);
+                        const category = categories.find(category => category.id === event.categoryId);
 
-                actionsCell.innerHTML =
-                    '<button class="btn btn-primary" onclick="openEditModalEvents(\'' +
-                    event.id +
-                    '\', \'' +
-                    event.name +
-                    '\', \'' +
-                    event.description +
-                    '\', \'' +
-                    event.local +
-                    '\', \'' +
-                    event.maxparticipants +
-                    '\', \'' +
-                    event.createdBy +
-                    '\', \'' +
-                    event.categoryId +
-                    '\')">Edit</button><button class="btn btn-danger" onclick="deleteEvent(\'' +
-                    event.id +
-                    '\')">Delete</button>';
-            });
+                        // Create a new row in the table
+                        const newRow = table.insertRow();
+
+                        // Create cells for each field
+                        const nameCell = newRow.insertCell();
+                        const descriptionCell = newRow.insertCell();
+                        const locationCell = newRow.insertCell();
+                        const maxParticipantsCell = newRow.insertCell();
+                        const createdByCell = newRow.insertCell();
+                        const categoryCell = newRow.insertCell();
+                        const actionsCell = newRow.insertCell();
+
+                        // Set the content of each cell
+                        nameCell.textContent = event.name;
+                        descriptionCell.textContent = event.description;
+                        locationCell.textContent = event.location;
+                        maxParticipantsCell.textContent = event.maxParticipants;
+                        createdByCell.textContent = user ? user.name : 'Unknown User';
+                        categoryCell.textContent = category ? category.name : 'Unknown Category';
+
+                        actionsCell.innerHTML =
+                            '<button class="btn btn-primary" onclick="openEditModalEvents(\'' +
+                            event.id +
+                            '\', \'' +
+                            event.name +
+                            '\', \'' +
+                            event.description +
+                            '\', \'' +
+                            event.location +
+                            '\', \'' +
+                            event.maxParticipants +
+                            '\', \'' +
+                            '\')">Edit</button><button class="btn btn-danger" onclick="deleteEvent(\'' +
+                            event.id +
+                            '\')">Delete</button>';
+                    });
+                }))
+                .catch(error => {
+                    console.error('Error fetching user and category details:', error);
+                });
         })
         .catch(error => {
             // Handle the returned error in case of failure
@@ -88,11 +104,7 @@ async function CreateEvent() {
         console.log('Event created successfully:', response.data);
 
         getEvents();
-
-        // Close the modal
-        const modal = document.getElementById('exampleModal');
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        modalInstance.hide();
+        
     } catch (error) {
         console.error('Error creating event:', error);
         alert('Error creating event');
@@ -128,56 +140,86 @@ async function deleteEvent(eventId) {
 }
 
 async function updateEvent() {
-    const eventId = document.getElementById('editEventModal').getAttribute('data-event-id');
-    const updatedName = document.getElementById('editEventNameInput').value;
-    const updatedDescription = document.getElementById('editEventDescriptionInput').value;
-    const updatedLocation = document.getElementById('editEventLocationInput').value;
-    const updatedMaxParticipants = document.getElementById('editEventMaxParticipantsInput').value;
-    const updatedCreatedBy = document.getElementById('editEventCreatedByInput').value;
-    const updatedCategory = document.getElementById('editEventCategoryInput').value;
-
-    try {
-        const data = {
-            id: eventId,
-            name: updatedName,
-            description: updatedDescription,
-            local: updatedLocation,
-            maxparticipants: updatedMaxParticipants,
-            createdBy: updatedCreatedBy,
-            categoryId: updatedCategory
-        };
-
-        const response = await axios.put(`http://localhost:5052/api/Events/${eventId}`, data);
-
-        alert('Event updated successfully!');
-
-        const editModal = document.getElementById('editEventModal');
-        const modalInstance = bootstrap.Modal.getInstance(editModal);
-        modalInstance.hide();
-
-        getEvents();
-    } catch (error) {
-        console.error('Error updating event:', error);
-        alert('Error updating event');
-    }
-    location.reload();
+    
 }
 
 function openEditModalEvents(eventId, eventName, eventDescription, eventLocation, eventMaxParticipants, eventCreatedBy, eventCategory) {
-    const modal = document.getElementById('editEventModal');
 
-    // Set the event ID as a data attribute of the modal
-    modal.setAttribute('data-event-id', eventId);
-
+    const categoryDropdown = document.getElementById("eventEditCategoryInput");
+    axios.get("http://localhost:5052/api/Categories")
+        .then(response => {
+            const categories = response.data;
+            categories.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.id;
+                option.text = category.name;
+                categoryDropdown.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao obter categorias:", error);
+        });
+    const userDropdown = document.getElementById("eventEditCreatedByInput");
+    axios.get("http://localhost:5052/api/Users")
+        .then(response => {
+            const users = response.data;
+            users.forEach(user => {
+                const option = document.createElement("option");
+                option.value = user.id;
+                option.text = user.name;
+                userDropdown.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao obter usuários:", error);
+        });
+    
+    
     // Populate the modal fields with the event data
     document.getElementById('editEventNameInput').value = eventName;
     document.getElementById('editEventDescriptionInput').value = eventDescription;
     document.getElementById('editEventLocationInput').value = eventLocation;
     document.getElementById('editEventMaxParticipantsInput').value = eventMaxParticipants;
-    document.getElementById('editEventCreatedByInput').value = eventCreatedBy;
-    document.getElementById('editEventCategoryInput').value = eventCategory;
 
-    // Show the modal
-    const modalInstance = bootstrap.Modal.getInstance(modal);
-    modalInstance.show();
+
+    // Define o atributo "data-category-id" na modal de edição com o ID do evento
+    const editModal = document.getElementById('editEventModal');
+    editModal.setAttribute('data-category-id', eventId);
+
+    // Abre a modal de edição usando o Bootstrap
+    const modal = new bootstrap.Modal(editModal);
+    modal.show();
+}
+
+function openAddEventModal() {
+    const categoryDropdown = document.getElementById("eventCategoryInput");
+    axios.get("http://localhost:5052/api/Categories")
+        .then(response => {
+            const categories = response.data;
+            categories.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.id;
+                option.text = category.name;
+                categoryDropdown.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao obter categorias:", error);
+        });
+    const userDropdown = document.getElementById("eventCreatedByInput");
+    axios.get("http://localhost:5052/api/Users")
+        .then(response => {
+            const users = response.data;
+            users.forEach(user => {
+                const option = document.createElement("option");
+                option.value = user.id;
+                option.text = user.name;
+                userDropdown.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao obter usuários:", error);
+        });
+    var addEventModal = new bootstrap.Modal(document.getElementById('addEventModal'));
+    addEventModal.show();
 }
