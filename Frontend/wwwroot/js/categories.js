@@ -9,7 +9,7 @@ function getCategories() {
     };
 
     // URL do endpoint
-    const url = 'http://localhost:5052/api/Category';
+    const url = 'http://localhost:5052/api/Categories';
 
     // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
@@ -43,7 +43,7 @@ async function CreateCategory() {
     const categoryName = document.getElementById('categoryNameInput').value;
 
     try {
-        const response = await axios.post('http://localhost:5052/api/Category', {
+        const response = await axios.post('http://localhost:5052/api/Categories', {
             name: categoryName
         });
 
@@ -75,7 +75,7 @@ async function deleteCategory(categoryId) {
             Authorization: `Bearer ${token}`
         };
 
-        const url = `http://localhost:5052/api/Category/${categoryId}`;
+        const url = `http://localhost:5052/api/Categories/${categoryId}`;
 
         const response = await axios.delete(url, { headers });
 
@@ -105,7 +105,7 @@ async function updateCategory() {
         };
 
         // Make the PUT request to update the category
-        const response = await axios.put(`http://localhost:5052/api/Category/${categoryId}`, data);
+        const response = await axios.put(`http://localhost:5052/api/Categories/${categoryId}`, data);
 
         alert('Category updated successfully!');
 
