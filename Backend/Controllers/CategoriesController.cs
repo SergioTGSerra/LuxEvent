@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using BusinessLogic.Entities;
 using BusinessLogic.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _categoryService;

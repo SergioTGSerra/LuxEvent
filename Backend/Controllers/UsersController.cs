@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Models;
 using BusinessLogic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -17,6 +18,7 @@ namespace Backend.Controllers
      }
  
      [HttpGet("{id}")]
+     [Authorize] 
      public async Task<IActionResult> GetUserById(Guid id)
      {
          var user = await _userService.GetUserById(id);
@@ -29,6 +31,7 @@ namespace Backend.Controllers
      }
  
      [HttpGet]
+     [Authorize]
      public async Task<IActionResult> GetAllUsers()
      {
          var users = await _userService.GetAllUsers();
@@ -43,6 +46,7 @@ namespace Backend.Controllers
      }
  
      [HttpPut("{id}")]
+     [Authorize]
      public async Task<ActionResult<User>> UpdateUser(Guid id, UserModel userModel)
      {
          if (id != userModel.Id)
@@ -61,6 +65,7 @@ namespace Backend.Controllers
      }
  
      [HttpDelete("{id}")]
+     [Authorize]
      public async Task<IActionResult> DeleteUser(Guid id)
      {
          await _userService.DeleteUser(id);

@@ -1,11 +1,13 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TicketTypesController : ControllerBase
     {
         private readonly TicketTypeService _ticketTypeService;
