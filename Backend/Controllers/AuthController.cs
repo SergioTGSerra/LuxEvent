@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BusinessLogic.Entities;
 using BusinessLogic.Models;
 using BusinessLogic.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,8 @@ namespace Backend.Controllers
         
         [HttpPost("token")]
         public async Task<IActionResult> GenerateToken([FromBody] AuthModel login) { 
-            if (await IsValidUser(login)) { 
-                var token = GenerateJwtToken(login.Username);
+            if (await IsValidUser(login)) {
+                var token = GenerateJwtToken(await _userService.GetUserByUsernameAndPassword(login));
                 return Ok(new { Token = token });
             }
             return Unauthorized();
@@ -35,9 +36,10 @@ namespace Backend.Controllers
         }
 
         
-        private string GenerateJwtToken(string username) { 
+        private string GenerateJwtToken(User user) { 
             var claims = new[] { 
-                new Claim(ClaimTypes.Name, username)
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, user.UserType)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"] ?? string.Empty));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

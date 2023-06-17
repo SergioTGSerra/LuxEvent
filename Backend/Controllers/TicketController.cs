@@ -18,6 +18,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "User,Organizer,Admin")]
     public async Task<ActionResult<List<Ticket>>> GetAllTickets()
     {
         var tickets = await _ticketService.GetAllTickets();
@@ -25,6 +26,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "User,Organizer,Admin")]
     public async Task<ActionResult<Ticket>> GetTicketById(Guid id)
     {
         var ticket = await _ticketService.GetTicketById(id);
@@ -36,6 +38,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Organizer,Admin")]
     public async Task<ActionResult> CreateTicket(Ticket ticket)
     {
         await _ticketService.CreateTicket(ticket);
@@ -43,6 +46,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Organizer,Admin")]
     public async Task<ActionResult> UpdateTicket(Guid id, Ticket ticket)
     {
         if (id != ticket.Id)
@@ -55,6 +59,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Organizer,Admin")]
     public async Task<ActionResult> DeleteTicket(Guid id)
     {
         await _ticketService.DeleteTicket(id);

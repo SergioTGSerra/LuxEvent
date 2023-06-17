@@ -7,7 +7,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ActivitiesController : ControllerBase
     {
         private readonly ActivityService _activityService;
@@ -18,6 +17,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<List<Activity>>> GetAllActivities()
         {
             var activities = await _activityService.GetAllActivitiesAsync();
@@ -25,6 +25,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<Activity>> GetActivityById(Guid id)
         {
             var activity = await _activityService.GetActivityByIdAsync(id);
@@ -36,6 +37,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
             await _activityService.CreateActivityAsync(activity);
@@ -43,6 +45,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<IActionResult> UpdateActivity(Guid id, Activity activity)
         {
             if (id != activity.Id)
@@ -55,6 +58,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
             await _activityService.DeleteActivityAsync(id);

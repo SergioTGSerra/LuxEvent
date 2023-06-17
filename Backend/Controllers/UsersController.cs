@@ -18,7 +18,7 @@ namespace Backend.Controllers
      }
  
      [HttpGet("{id}")]
-     [Authorize] 
+     [Authorize(Roles = "Organizer,Admin")]
      public async Task<IActionResult> GetUserById(Guid id)
      {
          var user = await _userService.GetUserById(id);
@@ -31,7 +31,7 @@ namespace Backend.Controllers
      }
  
      [HttpGet]
-     [Authorize]
+     [Authorize(Roles = "Organizer,Admin")]
      public async Task<IActionResult> GetAllUsers()
      {
          var users = await _userService.GetAllUsers();
@@ -46,7 +46,7 @@ namespace Backend.Controllers
      }
  
      [HttpPut("{id}")]
-     [Authorize]
+     [Authorize(Roles = "Organizer,Admin")]
      public async Task<ActionResult<User>> UpdateUser(Guid id, UserModel userModel)
      {
          if (id != userModel.Id)
@@ -65,7 +65,7 @@ namespace Backend.Controllers
      }
  
      [HttpDelete("{id}")]
-     [Authorize]
+     [Authorize(Roles = "Organizer,Admin")]
      public async Task<IActionResult> DeleteUser(Guid id)
      {
          await _userService.DeleteUser(id);

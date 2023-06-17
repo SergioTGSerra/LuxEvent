@@ -7,7 +7,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class EventsController : ControllerBase
     {
         private readonly EventService _eventService;
@@ -18,6 +17,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<List<Event>>> GetEvents()
         {
             var events = await _eventService.GetEvents();
@@ -25,6 +25,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<Event>> GetEvent(Guid id)
         {
             var @event = await _eventService.GetEventById(id);
@@ -36,6 +37,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<ActionResult<Event>> CreateEvent(Event newEvent)
         {
             await _eventService.CreateEvent(newEvent);
@@ -43,6 +45,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<ActionResult> UpdateEvent(Guid id, Event updatedEvent)
         {
             if (id != updatedEvent.Id)
@@ -55,6 +58,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<ActionResult> DeleteEvent(Guid id)
         {
             await _eventService.DeleteEvent(id);

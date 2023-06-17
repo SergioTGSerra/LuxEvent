@@ -18,6 +18,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<List<TicketType>>> GetAllTicketTypes()
         {
             var ticketTypes = await _ticketTypeService.GetAllTicketTypesAsync();
@@ -25,6 +26,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<TicketType>> GetTicketTypeById(Guid id)
         {
             var ticketType = await _ticketTypeService.GetTicketTypeByIdAsync(id);
@@ -37,6 +39,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<IActionResult> CreateTicketType(TicketType ticketType)
         {
             await _ticketTypeService.CreateTicketTypeAsync(ticketType);
@@ -44,6 +47,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<IActionResult> UpdateTicketType(Guid id, TicketType ticketType)
         {
             try
@@ -58,6 +62,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Organizer,Admin")]
         public async Task<IActionResult> DeleteTicketType(Guid id)
         {
             try

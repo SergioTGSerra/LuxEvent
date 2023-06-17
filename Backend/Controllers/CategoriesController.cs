@@ -7,7 +7,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _categoryService;
@@ -18,6 +17,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
             var categories = await _categoryService.GetAllCategories();
@@ -25,6 +25,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<Category>> GetCategoryById(Guid id)
         {
             var category = await _categoryService.GetCategoryById(id);
@@ -36,6 +37,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> CreateCategory(Category category)
         {
             var createdCategory = await _categoryService.CreateCategory(category);
@@ -43,6 +45,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> UpdateCategory(Guid id, Category category)
         {
             if (id != category.Id)
@@ -59,6 +62,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             var existingCategory = await _categoryService.GetCategoryById(id);
