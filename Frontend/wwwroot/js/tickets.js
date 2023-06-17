@@ -5,6 +5,7 @@ function getTickets() {
     };
     const url = 'http://localhost:5052/api/Tickets';
     const table = document.querySelector('.table');
+    table.innerHTML = ''; // Clear the table before populating it again
 
     axios.get(url, { headers })
         .then(response => {
@@ -41,14 +42,23 @@ function getTickets() {
                     });
 
                 priceCell.textContent = item.price;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalTicket(\'' + item.id + '\', \'' + item.eventId + '\', \'' + item.ticketTypeId + '\', \'' + item.price + '\')">Editar</button><button class="btn btn-danger" onclick="deleteTicket(\'' + item.id + '\')">Excluir</button>';
+                actionsCell.innerHTML = `<button class="btn btn-primary" onclick="openEditModalTicket('${item.id}', '${item.eventId}', '${item.ticketTypeId}', '${item.price}')">Editar</button><button class="btn btn-danger" onclick="deleteTicket('${item.id}')">Excluir</button>`;
             });
         })
         .catch(error => {
             console.error(error);
         });
 }
+
 async function CreateTicket() {
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     const event = document.getElementById('event').value;
     const ticketType = document.getElementById('ticketType').value;
     const price = document.getElementById('price').value;
@@ -58,11 +68,11 @@ async function CreateTicket() {
             eventId: event,
             ticketTypeId: ticketType,
             price: price
-        });
+        }, { headers });
 
         console.log('Ticket criado com sucesso:', response.data);
 
-        getCategories()
+        getTickets();
 
         // Fechar o modal
         const modal = document.getElementById('ticketModal');
@@ -70,9 +80,8 @@ async function CreateTicket() {
         modalInstance.hide();
     } catch (error) {
         console.error('Erro ao criar ticket:', error);
-        alert("Erro ao criar ticket")
+        alert("Erro ao criar ticket");
     }
-    location.reload();
 }
 
 async function deleteTicket(ticketId) {
@@ -94,15 +103,13 @@ async function deleteTicket(ticketId) {
 
         console.log('Ticket apagado com sucesso:', response.data);
 
-        // Atualizar a tabela ou realizar outras ações necessárias após a exclusão da categoria
-        getCategories()
+        // Atualizar a tabela ou realizar outras ações necessárias após a exclusão do ticket
+        getTickets();
 
     } catch (error) {
         console.error('Erro ao apagar ticket:', error);
         alert("Erro ao apagar ticket");
     }
-    location.reload();
-
 }
 
 async function UpdateTicket() {
@@ -111,27 +118,42 @@ async function UpdateTicket() {
     const ticketTypeId = document.getElementById('ticketModalEdit').getAttribute('ticketType-id');
     const price = document.getElementById('priceEdit').value;
 
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     try {
         const response = await axios.put(`http://localhost:5052/api/Tickets/${ticketId}`, {
             id: ticketId,
             eventId: eventId,
             ticketTypeId: ticketTypeId,
             price: price
-        });
+        }, { headers });
 
-        console.log('Ticket updated successfully:', response.data);
+        console.log('Ticket atualizado com sucesso:', response.data);
 
-        getEvents();
+        getTickets();
     } catch (error) {
-        console.error('Error updating Ticket:', error);
-        alert('Error updating Ticket');
+        console.error('Erro ao atualizar ticket:', error);
+        alert('Erro ao atualizar ticket');
     }
-    location.reload();
 }
 
 function openAddTicketModal() {
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     const eventDropdown = document.getElementById("event");
-    axios.get("http://localhost:5052/api/Events")
+    axios.get("http://localhost:5052/api/Events", { headers })
         .then(response => {
             const events = response.data;
             events.forEach(event => {
@@ -142,10 +164,11 @@ function openAddTicketModal() {
             });
         })
         .catch(error => {
-            console.error("Error while fetching events:", error);
+            console.error("Erro ao buscar eventos:", error);
         });
+
     const ticketTypesDropdown = document.getElementById("ticketType");
-    axios.get("http://localhost:5052/api/TicketTypes")
+    axios.get("http://localhost:5052/api/TicketTypes", { headers })
         .then(response => {
             const ticketTypes = response.data;
             ticketTypes.forEach(ticketType => {
@@ -156,25 +179,24 @@ function openAddTicketModal() {
             });
         })
         .catch(error => {
-            console.error("Error while fetching ticket types:", error);
+            console.error("Erro ao buscar tipos de ticket:", error);
         });
+
     var addTicketModal = new bootstrap.Modal(document.getElementById('ticketModal'));
     addTicketModal.show();
 }
 
 function openEditModalTicket(ticketId, eventId, ticketType, price) {
-
-    // Populate the modal fields with the event data
+    // Popula os campos do modal com os dados do ticket
     document.getElementById('priceEdit').value = price;
 
-
-    // Define o atributo "data-category-id" na modal de edição com o ID do evento
+    // Define os atributos "data-event-id", "data-ticketType-id" e "data-ticket-id" no modal de edição
     const editModal = document.getElementById('ticketModalEdit');
     editModal.setAttribute('event-id', eventId);
     editModal.setAttribute('ticketType-id', ticketType);
     editModal.setAttribute('ticket-id', ticketId);
-    
-    // Abre a modal de edição usando o Bootstrap
+
+    // Abre o modal de edição usando o Bootstrap
     const modal = new bootstrap.Modal(editModal);
     modal.show();
 }

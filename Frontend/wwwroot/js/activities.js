@@ -59,16 +59,24 @@ async function CreateActivity() {
     const description = document.getElementById('description').value;
     const event = document.getElementById('event').value;
 
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     try {
         const response = await axios.post('http://localhost:5052/api/Activities', {
             name: name,
             description: description,
             eventId: event
-        });
+        }, { headers });
 
         console.log('Activity criada com sucesso:', response.data);
 
-        getCategories()
+        getCategories();
 
         // Fechar o modal
         const modal = document.getElementById('exampleModal');
@@ -76,7 +84,7 @@ async function CreateActivity() {
         modalInstance.hide();
     } catch (error) {
         console.error('Erro ao criar Activity:', error);
-        alert("Erro ao criar Activity")
+        alert("Erro ao criar Activity");
     }
     location.reload();
 }
@@ -105,7 +113,6 @@ async function deleteActivity(activityId) {
         alert("Erro ao apagar Activity");
     }
     location.reload();
-
 }
 
 async function updateActivity() {
@@ -114,13 +121,21 @@ async function updateActivity() {
     const updatedDescription = document.getElementById('descriptionEdit').value;
     const updatedEvent = document.getElementById('eventEdit').value;
 
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     try {
         const response = await axios.put(`http://localhost:5052/api/Activities/${activityId}`, {
             id: activityId,
             name: updatedName,
             description: updatedDescription,
             eventId: updatedEvent
-        });
+        }, { headers });
 
         console.log('Activity atualizada com sucesso:', response.data);
 
@@ -147,9 +162,17 @@ function openEditModalActivity(activityId, name, description) {
     editNameInput.value = name;
     editDescriptionInput.value = description;
 
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     // Obtenha o evento atual da atividade
     const eventDropdown = document.getElementById("eventEdit");
-    axios.get("http://localhost:5052/api/Events")
+    axios.get("http://localhost:5052/api/Events", { headers })
         .then(response => {
             const events = response.data;
             events.forEach(event => {
@@ -174,7 +197,16 @@ function openEditModalActivity(activityId, name, description) {
 
 function openAddActivityModal() {
     const eventDropdown = document.getElementById("event");
-    axios.get("http://localhost:5052/api/Events")
+
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
+    axios.get("http://localhost:5052/api/Events", { headers })
         .then(response => {
             const events = response.data;
             events.forEach(event => {

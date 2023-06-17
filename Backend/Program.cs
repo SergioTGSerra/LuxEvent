@@ -63,6 +63,13 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Organizer", policy => policy.RequireRole("Organizer"));
+    options.AddPolicy("User", policy => policy.RequireRole("User"));
+});
+
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CategoryService>();

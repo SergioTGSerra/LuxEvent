@@ -1,39 +1,43 @@
 function getTicketTypes() {
-    // Get the token from the cookie
+    // Obtenha o token do cookie
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
-    // Set the header to include the token
+    // Configuração do cabeçalho para incluir o token
     const headers = {
         Authorization: `Bearer ${token}`
     };
 
-    // Endpoint URL
+    // URL do endpoint
     const url = 'http://localhost:5052/api/TicketTypes';
 
-    // Select the table in the DOM
+    // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
+    table.innerHTML = ''; // Clear the table before populating it again
 
-    // Send a GET request using Axios
+    // Fazendo a solicitação GET usando Axios
     axios.get(url, { headers })
         .then(response => {
             const data = response.data;
 
-            // Loop through the returned data
+            // Limpa a tabela antes de preenchê-la novamente
+            table.innerHTML = '';
+
+            // Percorre os dados retornados
             data.forEach(item => {
-                // Create a new row in the table
+                // Cria uma nova linha na tabela
                 const newRow = table.insertRow();
 
-                // Create cells for the "Name" and "Actions" columns
+                // Cria as células para as colunas "Name" e "Actions"
                 const nameCell = newRow.insertCell();
                 const actionsCell = newRow.insertCell();
 
-                // Set the content of the cells
+                // Define o conteúdo das células
                 nameCell.textContent = item.name;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalTicketType(\'' + item.id + '\', \'' + item.name + '\')">Edit</button><button class="btn btn-danger" onclick="deleteTicketType(\'' + item.id + '\')">Delete</button>';
+                actionsCell.innerHTML = `<button class="btn btn-primary" onclick="openEditModalTicketType('${item.id}', '${item.name}')">Editar</button><button class="btn btn-danger" onclick="deleteTicketType('${item.id}')">Excluir</button>`;
             });
         })
         .catch(error => {
-            // Handle the returned error in case of failure
+            // Em caso de erro, você pode lidar com o erro retornado
             console.error(error);
         });
 }
@@ -41,29 +45,37 @@ function getTicketTypes() {
 async function createTicketType() {
     const ticketTypeName = document.getElementById('ticketTypeNameInput').value;
 
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     try {
         const response = await axios.post('http://localhost:5052/api/TicketTypes', {
             name: ticketTypeName
-        });
+        }, { headers });
 
-        console.log('Ticket type created successfully:', response.data);
+        console.log('Tipo de ingresso criado com sucesso:', response.data);
 
-        getTicketTypes();
-
-        // Close the modal
+        // Fechar o modal
         const modal = document.getElementById('exampleModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
+
+        // Atualizar a tabela
+        getTicketTypes();
     } catch (error) {
-        console.error('Error creating ticket type:', error);
-        alert("Error creating ticket type");
+        console.error('Erro ao criar tipo de ingresso:', error);
+        alert('Erro ao criar tipo de ingresso');
     }
-    location.reload();
 }
 
 async function deleteTicketType(ticketTypeId) {
     try {
-        const confirmation = confirm("Are you sure you want to delete this ticket type?");
+        const confirmation = confirm('Tem certeza que deseja apagar este tipo de ingresso?');
 
         if (!confirmation) {
             return;
@@ -78,58 +90,64 @@ async function deleteTicketType(ticketTypeId) {
 
         const response = await axios.delete(url, { headers });
 
-        console.log('Ticket type deleted successfully:', response.data);
+        console.log('Tipo de ingresso apagado com sucesso:', response.data);
 
-        // Update the table or perform other necessary actions after deleting the ticket type
+        // Atualizar a tabela
         getTicketTypes();
     } catch (error) {
-        console.error('Error deleting ticket type:', error);
-        alert("Error deleting ticket type");
+        console.error('Erro ao apagar tipo de ingresso:', error);
+        alert('Erro ao apagar tipo de ingresso');
     }
-    location.reload();
 }
 
 async function updateTicketType() {
-    // Get the ticket type ID and updated name from the modal
+    // Obtenha o ID do tipo de ingresso e o novo nome do modal de edição
     const ticketTypeId = document.getElementById('editTicketTypeModal').getAttribute('data-ticket-type-id');
     const updatedName = document.getElementById('editTicketTypeNameInput').value;
 
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+
     try {
-        // Create the request payload
+        // Crie os dados da requisição
         const data = {
             id: ticketTypeId,
             name: updatedName
         };
 
-        // Make the PUT request to update the ticket type
-        const response = await axios.put(`http://localhost:5052/api/TicketTypes/${ticketTypeId}`, data);
+        // Faça a requisição PUT para atualizar o tipo de ingresso
+        const response = await axios.put(`http://localhost:5052/api/TicketTypes/${ticketTypeId}`, data, { headers });
 
-        alert('Ticket type updated successfully!');
+        alert('Tipo de ingresso atualizado com sucesso!');
 
-        // Close the edit modal
+        // Feche o modal de edição
         const editModal = document.getElementById('editTicketTypeModal');
         const modalInstance = bootstrap.Modal.getInstance(editModal);
         modalInstance.hide();
 
-        // Refresh the ticket types table
+        // Atualize a tabela de tipos de ingresso
         getTicketTypes();
     } catch (error) {
-        console.error('Error updating ticket type:', error);
-        alert('Error updating ticket type');
+        console.error('Erro ao atualizar tipo de ingresso:', error);
+        alert('Erro ao atualizar tipo de ingresso');
     }
-    location.reload();
 }
 
 function openEditModalTicketType(ticketTypeId, ticketTypeName) {
-    // Set the value of the input in the edit modal to the ticket type name
+    // Defina o valor do input da modal de edição com o nome do tipo de ingresso
     const editTicketTypeNameInput = document.getElementById('editTicketTypeNameInput');
     editTicketTypeNameInput.value = ticketTypeName;
 
-    // Set the "data-ticket-type-id" attribute in the edit modal to the ticket type ID
+    // Defina o atributo "data-ticket-type-id" na modal de edição com o ID do tipo de ingresso
     const editModal = document.getElementById('editTicketTypeModal');
     editModal.setAttribute('data-ticket-type-id', ticketTypeId);
 
-    // Open the edit modal using Bootstrap
+    // Abra a modal de edição usando o Bootstrap
     const modal = new bootstrap.Modal(editModal);
     modal.show();
 }

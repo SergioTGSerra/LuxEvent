@@ -1,45 +1,49 @@
 function getUsers() {
-    // Get the token from the cookie
+    // Obtenha o token do cookie
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
-    // Set the header configuration to include the token
+    // Configuração do cabeçalho para incluir o token
     const headers = {
         Authorization: `Bearer ${token}`
     };
 
-    // API endpoint URL
+    // URL do endpoint
     const url = 'http://localhost:5052/api/Users';
 
-    // Select the table in the DOM
+    // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
+    table.innerHTML = ''; // Clear the table before populating it again
 
-    // Make a GET request using Axios
+    // Fazendo a solicitação GET usando Axios
     axios.get(url, { headers })
         .then(response => {
             const data = response.data;
 
-            // Loop through the returned data
+            // Limpa a tabela antes de preenchê-la novamente
+            table.innerHTML = '';
+
+            // Percorre os dados retornados
             data.forEach(item => {
-                // Create a new row in the table
+                // Cria uma nova linha na tabela
                 const newRow = table.insertRow();
 
-                // Create cells for each field
+                // Cria as células para cada campo
                 const nameCell = newRow.insertCell();
                 const usernameCell = newRow.insertCell();
                 const emailCell = newRow.insertCell();
                 const userTypeCell = newRow.insertCell();
                 const actionsCell = newRow.insertCell();
 
-                // Set the content of the cells
+                // Define o conteúdo das células
                 nameCell.textContent = item.name;
                 usernameCell.textContent = item.username;
                 emailCell.textContent = item.email;
                 userTypeCell.textContent = item.userType;
-                actionsCell.innerHTML = '<button class="btn btn-primary" onclick="openEditModalUser(\'' + item.id + '\', \'' + item.name + '\', \'' + item.username + '\', \'' + item.email + '\', \'' + item.userType + '\')">Edit</button><button class="btn btn-danger" onclick="deleteUser(\'' + item.id + '\')">Delete</button>';
+                actionsCell.innerHTML = `<button class="btn btn-primary" onclick="openEditModalUser('${item.id}', '${item.name}', '${item.username}', '${item.email}', '${item.userType}')">Editar</button><button class="btn btn-danger" onclick="deleteUser('${item.id}')">Excluir</button>`;
             });
         })
         .catch(error => {
-            // Handle the returned error in case of failure
+            // Em caso de erro, você pode lidar com o erro retornado
             console.error(error);
         });
 }
@@ -49,7 +53,17 @@ async function createUser() {
     const userUsername = document.getElementById('userUsernameInput').value;
     const userPassword = document.getElementById('userPasswordInput').value;
     const userEmail = document.getElementById('userEmailInput').value;
-    const userType = document.getElementById('userTypeInput').value;
+    //UserType
+    const inputValue = document.getElementById('userTypeInput').value;
+    const updatedUserType = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
 
     try {
         const response = await axios.post('http://localhost:5052/api/Users', {
@@ -57,34 +71,36 @@ async function createUser() {
             username: userUsername,
             password: userPassword,
             email: userEmail,
-            userType: userType
-        });
+            userType: updatedUserType
+        }, { headers });
 
-        console.log('User created successfully:', response.data);
+        console.log('Usuário criado com sucesso:', response.data);
 
-        // Refresh the users table
+        // Atualizar a tabela de usuários
         getUsers();
 
-        // Close the modal
+        // Fechar o modal
         const modal = document.getElementById('exampleModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Error creating user:', error);
-        alert("Error creating user");
+        console.error('Erro ao criar usuário:', error);
+        alert('Erro ao criar usuário');
     }
-    location.reload();
 }
 
 async function deleteUser(userId) {
     try {
-        const confirmation = confirm("Are you sure you want to delete this user?");
+        const confirmation = confirm('Tem certeza que deseja apagar este usuário?');
 
         if (!confirmation) {
             return;
         }
 
+        // Obtenha o token do cookie
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+        // Configuração do cabeçalho para incluir o token
         const headers = {
             Authorization: `Bearer ${token}`
         };
@@ -93,27 +109,36 @@ async function deleteUser(userId) {
 
         const response = await axios.delete(url, { headers });
 
-        console.log('User deleted successfully:', response.data);
+        console.log('Usuário excluído com sucesso:', response.data);
 
-        // Update the table or perform any necessary actions after deleting the user
+        // Atualizar a tabela de usuários
         getUsers();
     } catch (error) {
-        console.error('Error deleting user:', error);
-        alert("Error deleting user");
+        console.error('Erro ao excluir usuário:', error);
+        alert('Erro ao excluir usuário');
     }
-    location.reload();
 }
 
 async function updateUser() {
-    // Get the user ID and updated field values from the modal
+    // Obtenha o ID do usuário e os valores atualizados dos campos na modal
     const userId = document.getElementById('editUserModal').getAttribute('data-user-id');
     const updatedName = document.getElementById('editUserNameInput').value;
     const updatedUsername = document.getElementById('editUserUsernameInput').value;
     const updatedEmail = document.getElementById('editUserEmailInput').value;
-    const updatedUserType = document.getElementById('editUserTypeInput').value;
+    //UserType
+    const inputValue = document.getElementById('editUserTypeInput').value;
+    const updatedUserType = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
 
     try {
-        // Create the request payload
+        // Crie os dados da requisição
         const data = {
             id: userId,
             name: updatedName,
@@ -122,27 +147,26 @@ async function updateUser() {
             userType: updatedUserType
         };
 
-        // Make the PUT request to update the user
-        const response = await axios.put(`http://localhost:5052/api/Users/${userId}`, data);
+        // Faça a requisição PUT para atualizar o usuário
+        const response = await axios.put(`http://localhost:5052/api/Users/${userId}`, data, { headers });
 
-        alert('User updated successfully!');
+        alert('Usuário atualizado com sucesso!');
 
-        // Close the edit modal
+        // Feche a modal de edição
         const editModal = document.getElementById('editUserModal');
         const modalInstance = bootstrap.Modal.getInstance(editModal);
         modalInstance.hide();
 
-        // Refresh the users table
+        // Atualize a tabela de usuários
         getUsers();
     } catch (error) {
-        console.error('Error updating user:', error);
-        alert('Error updating user');
+        console.error('Erro ao atualizar usuário:', error);
+        alert('Erro ao atualizar usuário');
     }
-    location.reload();
 }
 
 function openEditModalUser(userId, userName, userUsername, userEmail, userUserType) {
-    // Set the value of the inputs in the edit modal
+    // Defina o valor dos campos na modal de edição
     const editUserNameInput = document.getElementById('editUserNameInput');
     const editUserUsernameInput = document.getElementById('editUserUsernameInput');
     const editUserEmailInput = document.getElementById('editUserEmailInput');
@@ -153,11 +177,11 @@ function openEditModalUser(userId, userName, userUsername, userEmail, userUserTy
     editUserEmailInput.value = userEmail;
     editUserTypeInput.value = userUserType;
 
-    // Set the "data-user-id" attribute in the edit modal with the user ID
+    // Defina o atributo "data-user-id" na modal de edição com o ID do usuário
     const editModal = document.getElementById('editUserModal');
     editModal.setAttribute('data-user-id', userId);
 
-    // Open the edit modal using Bootstrap
+    // Abra a modal de edição usando o Bootstrap
     const modal = new bootstrap.Modal(editModal);
     modal.show();
 }
