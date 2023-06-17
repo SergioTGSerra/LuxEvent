@@ -16,23 +16,47 @@ public class RegistrationEventService
 
     public async Task CreateRegistrationsEventAsync(RegistrationEventModel registrationEvent, Guid? userId)
     {
-        var registrationsEvent = new RegistrationsEvent
-        {
-            UserId = userId,
-            EventId = registrationEvent.EventId,
-        };
+        bool exists = await _dbContext.RegistrationsEvents
+            .AnyAsync(e => e.EventId == registrationEvent.EventId && e.UserId == userId);
 
-        _dbContext.RegistrationsEvents.Add(registrationsEvent);
-        await _dbContext.SaveChangesAsync();
+        if (!exists)
+        {
+            var registrationsEvent = new RegistrationsEvent
+            {
+                UserId = userId,
+                EventId = registrationEvent.EventId,
+            };
+
+            _dbContext.RegistrationsEvents.Add(registrationsEvent);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
-    public async Task DeleteRegistrationsEventAsync(Guid id)
+    public async Task DeleteRegistrationsEventAsync(RegistrationEventModel registrationEvent, Guid? userId)
     {
-        var registrationsEvent = await _dbContext.RegistrationsEvents.FindAsync(id);
+        var registrationsEvent = await _dbContext.RegistrationsEvents
+            .FirstOrDefaultAsync(e => e.EventId == registrationEvent.EventId && e.UserId == userId);
+
         if (registrationsEvent != null)
         {
             _dbContext.RegistrationsEvents.Remove(registrationsEvent);
             await _dbContext.SaveChangesAsync();
         }
     }
+    
+    public async Task<List<RegistrationEventModel>> GetRegistrationsEventsByUserAsync(Guid userId)
+    {
+        var registrationsEvents = await _dbContext.RegistrationsEvents
+            .Where(e => e.UserId == userId)
+            .ToListAsync();
+
+        var registrationEventModels = registrationsEvents.Select(e => new RegistrationEventModel
+        {
+            EventId = e.EventId,
+            // Outros campos que você desejar incluir
+        }).ToList();
+
+        return registrationEventModels;
+    }
+
 }
