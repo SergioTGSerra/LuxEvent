@@ -1,10 +1,11 @@
-﻿using BusinessLogic.Services;
+﻿using BusinessLogic.Entities;
+using BusinessLogic.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class TicketsController : ControllerBase
 {
     private readonly TicketService _ticketService;
@@ -14,41 +15,47 @@ public class TicketsController : ControllerBase
         _ticketService = ticketService;
     }
 
-    [HttpPost]
-    public IActionResult CreateTicket(Guid eventId, Guid ticketTypeId, decimal price)
-    {
-        var ticket = _ticketService.CreateTicket(eventId, ticketTypeId, price);
-        return Ok(ticket);
-    }
-
-    [HttpGet("{ticketId}")]
-    public IActionResult GetTicket(Guid ticketId)
-    {
-        var ticket = _ticketService.GetTicket(ticketId);
-        if (ticket == null)
-            return NotFound();
-
-        return Ok(ticket);
-    }
-
     [HttpGet]
-    public IActionResult GetAllTickets()
+    public async Task<ActionResult<List<Ticket>>> GetAllTickets()
     {
-        var tickets = _ticketService.GetAllTickets();
+        var tickets = await _ticketService.GetAllTickets();
         return Ok(tickets);
     }
 
-    [HttpPut("{ticketId}")]
-    public IActionResult UpdateTicket(Guid ticketId, decimal price)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Ticket>> GetTicketById(Guid id)
     {
-        _ticketService.UpdateTicket(ticketId, price);
+        var ticket = await _ticketService.GetTicketById(id);
+        if (ticket == null)
+        {
+            return NotFound();
+        }
+        return Ok(ticket);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> CreateTicket(Ticket ticket)
+    {
+        await _ticketService.CreateTicket(ticket);
+        return CreatedAtAction(nameof(GetTicketById), new { id = ticket.Id }, ticket);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateTicket(Guid id, Ticket ticket)
+    {
+        if (id != ticket.Id)
+        {
+            return BadRequest();
+        }
+
+        await _ticketService.UpdateTicket(ticket);
         return NoContent();
     }
 
-    [HttpDelete("{ticketId}")]
-    public IActionResult DeleteTicket(Guid ticketId)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteTicket(Guid id)
     {
-        _ticketService.DeleteTicket(ticketId);
+        await _ticketService.DeleteTicket(id);
         return NoContent();
     }
 }

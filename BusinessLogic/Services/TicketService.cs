@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Context;
 using BusinessLogic.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services;
 
@@ -12,49 +13,35 @@ public class TicketService
         _dbContext = dbContext;
     }
 
-    public Ticket CreateTicket(Guid eventId, Guid ticketTypeId, decimal price)
+    public async Task<List<Ticket>> GetAllTickets()
     {
-        var ticket = new Ticket
-        {
-            Id = Guid.NewGuid(),
-            EventId = eventId,
-            TicketTypeId = ticketTypeId,
-            Price = price
-        };
+        return await _dbContext.Tickets.ToListAsync();
+    }
 
+    public async Task<Ticket> GetTicketById(Guid id)
+    {
+        return await _dbContext.Tickets.FindAsync(id);
+    }
+
+    public async Task CreateTicket(Ticket ticket)
+    {
         _dbContext.Tickets.Add(ticket);
-        _dbContext.SaveChanges();
-
-        return ticket;
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Ticket GetTicket(Guid ticketId)
+    public async Task UpdateTicket(Ticket ticket)
     {
-        return _dbContext.Tickets.FirstOrDefault(t => t.Id == ticketId);
+        _dbContext.Entry(ticket).State = EntityState.Modified;
+        await _dbContext.SaveChangesAsync();
     }
 
-    public IEnumerable<Ticket> GetAllTickets()
+    public async Task DeleteTicket(Guid id)
     {
-        return _dbContext.Tickets.ToList();
-    }
-
-    public void UpdateTicket(Guid ticketId, decimal price)
-    {
-        var ticket = _dbContext.Tickets.FirstOrDefault(t => t.Id == ticketId);
-        if (ticket != null)
-        {
-            ticket.Price = price;
-            _dbContext.SaveChanges();
-        }
-    }
-
-    public void DeleteTicket(Guid ticketId)
-    {
-        var ticket = _dbContext.Tickets.FirstOrDefault(t => t.Id == ticketId);
+        var ticket = await _dbContext.Tickets.FindAsync(id);
         if (ticket != null)
         {
             _dbContext.Tickets.Remove(ticket);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

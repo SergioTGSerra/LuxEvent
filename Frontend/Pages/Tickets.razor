@@ -1,8 +1,8 @@
 @page "/Tickets"
-<h3>Categories</h3>
+<h3>Tickets</h3>
 @inject IJSRuntime JsRuntime
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="openAddTicketModal()">
   Add Ticket
 </button>
 
@@ -19,8 +19,8 @@
   </tbody>
 </table>
 
-<!-- Add Category Modal -->
-<div class="modal fade" id="addTicketModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Add Ticket Modal -->
+<div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -30,22 +30,46 @@
       <div class="modal-body">
         <form>
           <div class="mb-3">
-            <label for="categoryNameInput" class="form-label">Name</label>
-            <input type="text" class="form-control" id="categoryNameInput" aria-describedby="emailHelp">
+            <label for="event" class="form-label">Event</label>
+            <select class="form-control" id="event"></select>
           </div>
           <div class="mb-3">
-            <label for="eventCreatedByInput" class="form-label">Created By</label>
-            <select class="form-control" id="eventEditCreatedByInput"></select>
+            <label for="ticketType" class="form-label">TicketType</label>
+            <select class="form-control" id="ticketType"></select>
           </div>
           <div class="mb-3">
-            <label for="eventCategoryInput" class="form-label">Category</label>
-            <select class="form-control" id="eventEditCategoryInput"></select>
+            <label for="price" class="form-label">Price</label>
+            <input type="text" class="form-control" id="price" aria-describedby="emailHelp">
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="CreateCategory()">Create Category</button>
+        <button type="button" class="btn btn-primary" onclick="CreateTicket()">Create Ticket</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Edit Modal -->
+<div class="modal fade" id="ticketModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Ticket</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="priceEdit" class="form-label">Price</label>
+            <input type="text" class="form-control" id="priceEdit" aria-describedby="emailHelp">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="UpdateTicket()">Update Ticket</button>
       </div>
     </div>
   </div>
