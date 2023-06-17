@@ -1,4 +1,5 @@
-const signIn = async () => {
+async function Login(event) {
+    event.preventDefault();
     try {
         const username = document.getElementById('usernameInput').value;
         const password = document.getElementById('passwordInput').value
@@ -23,12 +24,6 @@ const signIn = async () => {
         alert("Username ou password errados!")
         // Lide com o erro de autenticação aqui.
     }
-};
 
-// Chame a função signIn quando o formulário for enviado.
-const form = document.querySelector('form');
-form.addEventListener('submit', (event) => {
-    event.preventDefault(); // Impede o envio padrão do formulário.
-    signIn();
-});
+}
     
