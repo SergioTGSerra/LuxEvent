@@ -9,8 +9,14 @@ function getEvents() {
     const categoriesUrl = 'http://localhost:5052/api/Categories';
 
     const table = document.querySelector('.table');
-    table.innerHTML = ''; // Clear the table before populating it again
 
+    const tableRows = table.querySelectorAll('tr');
+
+    // Começa a remoção a partir do segundo elemento (índice 1)
+    for (let i = 1; i < tableRows.length; i++) {
+        tableRows[i].remove();
+    }
+    
     axios.get(eventsUrl, { headers })
         .then(response => {
             const events = response.data;
@@ -83,7 +89,7 @@ async function CreateEvent() {
         getEvents();
     } catch (error) {
         console.error('Error creating event:', error);
-        alert('Error creating event');
+        alert('Não tem permissões suficientes para executar esta operação.');
     }
 }
 
@@ -108,7 +114,7 @@ async function deleteEvent(eventId) {
         getEvents();
     } catch (error) {
         console.error('Error deleting event:', error);
-        alert('Error deleting event');
+        alert('Não tem permissões suficientes para executar esta operação.');
     }
 }
 
@@ -141,7 +147,7 @@ async function updateEvent() {
         getEvents();
     } catch (error) {
         console.error('Error updating event:', error);
-        alert('Error updating event');
+        alert('Não tem permissões suficientes para executar esta operação.');
     }
 }
 
@@ -239,66 +245,5 @@ function openAddEventModal() {
         })
         .catch(error => {
             console.error("Error fetching categories:", error);
-        });
-}
-
-function getEvents() {
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
-    const headers = {
-        Authorization: `Bearer ${token}`
-    };
-
-    const eventsUrl = 'http://localhost:5052/api/Events';
-    const usersUrl = 'http://localhost:5052/api/Users';
-    const categoriesUrl = 'http://localhost:5052/api/Categories';
-
-    const table = document.querySelector('.table');
-
-    axios.get(eventsUrl, { headers })
-        .then(response => {
-            const events = response.data;
-
-            const userRequest = axios.get(usersUrl, { headers });
-            const categoryRequest = axios.get(categoriesUrl, { headers });
-
-            axios.all([userRequest, categoryRequest])
-                .then(axios.spread((userResponse, categoryResponse) => {
-                    const users = userResponse.data;
-                    const categories = categoryResponse.data;
-
-                    table.innerHTML = ''; // Clear the table before populating it again
-
-                    events.forEach(event => {
-                        const user = users.find(user => user.id === event.createdBy);
-                        const category = categories.find(category => category.id === event.categoryId);
-
-                        const newRow = table.insertRow();
-
-                        const nameCell = newRow.insertCell();
-                        const descriptionCell = newRow.insertCell();
-                        const locationCell = newRow.insertCell();
-                        const maxParticipantsCell = newRow.insertCell();
-                        const createdByCell = newRow.insertCell();
-                        const categoryCell = newRow.insertCell();
-                        const actionsCell = newRow.insertCell();
-
-                        nameCell.textContent = event.name;
-                        descriptionCell.textContent = event.description;
-                        locationCell.textContent = event.location;
-                        maxParticipantsCell.textContent = event.maxParticipants;
-                        createdByCell.textContent = user ? user.name : 'Unknown User';
-                        categoryCell.textContent = category ? category.name : 'Unknown Category';
-
-                        actionsCell.innerHTML =
-                            `<button class="btn btn-primary" onclick="openEditModalEvents('${event.id}', '${event.name}', '${event.description}', '${event.location}', '${event.maxParticipants}')">Edit</button>
-                            <button class="btn btn-danger" onclick="deleteEvent('${event.id}')">Delete</button>`;
-                    });
-                }))
-                .catch(error => {
-                    console.error('Error fetching user and category details:', error);
-                });
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error);
         });
 }

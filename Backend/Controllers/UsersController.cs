@@ -18,7 +18,7 @@ namespace Backend.Controllers
      }
  
      [HttpGet("{id}")]
-     [Authorize(Roles = "Organizer,Admin")]
+     [Authorize(Roles = "User,Organizer,Admin")]
      public async Task<IActionResult> GetUserById(Guid id)
      {
          var user = await _userService.GetUserById(id);
@@ -31,7 +31,7 @@ namespace Backend.Controllers
      }
  
      [HttpGet]
-     [Authorize(Roles = "Organizer,Admin")]
+     [Authorize(Roles = "User,Organizer,Admin")]
      public async Task<IActionResult> GetAllUsers()
      {
          var users = await _userService.GetAllUsers();

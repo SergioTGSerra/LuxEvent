@@ -12,15 +12,18 @@ function getUsers() {
 
     // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
-    table.innerHTML = ''; // Clear the table before populating it again
+
+    const tableRows = table.querySelectorAll('tr');
+
+    // Começa a remoção a partir do segundo elemento (índice 1)
+    for (let i = 1; i < tableRows.length; i++) {
+        tableRows[i].remove();
+    }
 
     // Fazendo a solicitação GET usando Axios
     axios.get(url, { headers })
         .then(response => {
             const data = response.data;
-
-            // Limpa a tabela antes de preenchê-la novamente
-            table.innerHTML = '';
 
             // Percorre os dados retornados
             data.forEach(item => {

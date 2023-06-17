@@ -5,7 +5,13 @@ function getTickets() {
     };
     const url = 'http://localhost:5052/api/Tickets';
     const table = document.querySelector('.table');
-    table.innerHTML = ''; // Clear the table before populating it again
+
+    const tableRows = table.querySelectorAll('tr');
+
+    // Começa a remoção a partir do segundo elemento (índice 1)
+    for (let i = 1; i < tableRows.length; i++) {
+        tableRows[i].remove();
+    }
 
     axios.get(url, { headers })
         .then(response => {
@@ -80,7 +86,7 @@ async function CreateTicket() {
         modalInstance.hide();
     } catch (error) {
         console.error('Erro ao criar ticket:', error);
-        alert("Erro ao criar ticket");
+        alert("Não tem permissões suficientes para executar esta operação.");
     }
 }
 
@@ -108,7 +114,7 @@ async function deleteTicket(ticketId) {
 
     } catch (error) {
         console.error('Erro ao apagar ticket:', error);
-        alert("Erro ao apagar ticket");
+        alert("Não tem permissões suficientes para executar esta operação.");
     }
 }
 
@@ -139,7 +145,7 @@ async function UpdateTicket() {
         getTickets();
     } catch (error) {
         console.error('Erro ao atualizar ticket:', error);
-        alert('Erro ao atualizar ticket');
+        alert('Não tem permissões suficientes para executar esta operação.');
     }
 }
 

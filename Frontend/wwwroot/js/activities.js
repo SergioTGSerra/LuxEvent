@@ -12,6 +12,12 @@ function getActivities() {
 
     // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
+    const tableRows = table.querySelectorAll('tr');
+
+    // Começa a remoção a partir do segundo elemento (índice 1)
+    for (let i = 1; i < tableRows.length; i++) {
+        tableRows[i].remove();
+    }
 
     // Fazendo a solicitação GET usando Axios
     axios
@@ -76,17 +82,15 @@ async function CreateActivity() {
 
         console.log('Activity criada com sucesso:', response.data);
 
-        getCategories();
-
         // Fechar o modal
         const modal = document.getElementById('exampleModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
         console.error('Erro ao criar Activity:', error);
-        alert("Erro ao criar Activity");
+        alert("Não tem permissões suficientes para executar esta operação.");
     }
-    location.reload();
+    getActivities()
 }
 
 async function deleteActivity(activityId) {
@@ -110,9 +114,9 @@ async function deleteActivity(activityId) {
 
     } catch (error) {
         console.error('Erro ao apagar Activity:', error);
-        alert("Erro ao apagar Activity");
+        alert("Não tem permissões suficientes para executar esta operação.");
     }
-    location.reload();
+    getActivities()
 }
 
 async function updateActivity() {
@@ -144,13 +148,11 @@ async function updateActivity() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
-        // Atualizar a tabela de atividades
-        getActivities();
     } catch (error) {
         console.error('Erro ao atualizar Activity:', error);
-        alert("Erro ao atualizar Activity");
+        alert("Não tem permissões suficientes para executar esta operação.");
     }
-    location.reload();
+    getActivities()
 }
 
 function openEditModalActivity(activityId, name, description) {
