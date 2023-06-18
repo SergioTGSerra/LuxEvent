@@ -1,8 +1,112 @@
 ﻿@page "/"
+@inject IJSRuntime JsRuntime
 
-<PageTitle>Index</PageTitle>
+<h1>LuxEvent - Gestor de Eventos</h1>
 
-<h1>Hello, world!</h1>
+Plataforma de Gestão de Eventos desenvolvida como parte integrante da unidade curricular de Engenharia de Software 2, lecionada pelo professor Luis Teófilo.
 
-Welcome to your new app.
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<div class="alert alert-secondary mt-4">
+  <span class="oi oi-pencil me-2" aria-hidden="true"></span>
+  <strong>Estatísticas Gerais</strong>
+  <div class="row">
+    
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Bem-Vindo</h5>
+            Olá @userName você é um @userRole!
+            @if (userRole == "User")
+            {
+              <p> Pode-se inscrever em eventos e atividades.</p> 
+            }
+            @if (userRole == "Organizer")
+            {
+              <p>Pode-se inscrever em eventos, atividades e pode fazer a criação de eventos tickets, tipos de tickets e atividades e a gestão de utilizadores.</p> 
+            }
+            @if (userRole == "Admin")
+            {
+              <p>Pode-se inscrever em eventos, atividades e pode fazer a criação de eventos tickets, tipos de tickets, atividades, categorias e a gestão de utilizadores.</p> 
+            }
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Número total de inscrições em Eventos</h5>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Top 10 Events</h5>
+          <table class="table">
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Número de eventos por categoria</h5>
+          <table class="table" id="category-table">
+            <thead>
+            <tr>
+              <th>Categoria</th>
+              <th>Número de Eventos</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    @if (userRole == "Organizer" || userRole == "Admin")
+    {
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">My Events</h5>
+            <table class="table" id="category-table">
+              <thead>
+              <tr>
+                <th>Events</th>
+                <th>Número de Eventos</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> 
+    }
+
+  </div>
+</div>
+
+@code
+{
+  private string userName;
+  private string userRole;
+    
+  protected override async Task OnInitializedAsync()
+  {
+    userName = await JsRuntime.InvokeAsync<string>("getUsername");
+    userRole = await JsRuntime.InvokeAsync<string>("getRole");
+    await JsRuntime.InvokeVoidAsync("getTotalParticipantsCount");
+    await JsRuntime.InvokeVoidAsync("getTopEvents");
+    await JsRuntime.InvokeVoidAsync("getCategoriesAndEventCounts");
+  }
+}
