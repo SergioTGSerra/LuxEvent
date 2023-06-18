@@ -159,6 +159,7 @@ function openAddTicketModal() {
     };
 
     const eventDropdown = document.getElementById("event");
+    eventDropdown.innerHTML = "";
     axios.get("http://localhost:5052/api/Events", { headers })
         .then(response => {
             const events = response.data;

@@ -111,6 +111,8 @@ async function deleteRegistrationEvent(eventId) {
 
 function openAddRegistrationEvent() {
     const eventDropdown = document.getElementById("event");
+    eventDropdown.innerHTML = "";
+
 
     // Obtenha o token do cookie
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
