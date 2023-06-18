@@ -86,3 +86,14 @@ function getUID(){
     const role = payload['UserId'];
     return role;
 }
+
+function getUsername(){
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    const [, payloadBase64] = token.split('.');
+
+    const payloadJSON = atob(payloadBase64);
+    const payload = JSON.parse(payloadJSON);
+
+    const role = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    return role;
+}
