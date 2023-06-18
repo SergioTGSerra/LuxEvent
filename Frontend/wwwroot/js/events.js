@@ -8,8 +8,8 @@ function getEvents() {
     const usersUrl = 'http://localhost:5052/api/Users';
     const categoriesUrl = 'http://localhost:5052/api/Categories';
 
+    // Seleciona a tabela no DOM
     const table = document.querySelector('.table');
-
     const tableRows = table.querySelectorAll('tr');
 
     // Começa a remoção a partir do segundo elemento (índice 1)

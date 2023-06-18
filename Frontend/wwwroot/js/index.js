@@ -93,3 +93,60 @@ function getCategoriesAndEventCounts() {
             console.error('Error fetching categories:', error);
         });
 }
+
+function getMyEvents() {
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+    
+    fetch('http://localhost:5052/api/Events/LoggedUser', { headers })
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('my-events-table').getElementsByTagName('tbody')[0];
+
+            data.forEach(event => {
+                const row = tableBody.insertRow();
+                const eventNameCell = row.insertCell();
+                const detailsCell = row.insertCell();
+
+                eventNameCell.innerHTML = event.name;
+                detailsCell.innerHTML = `<button class="btn btn-primary" onclick="showEventDetails('${event.id}')">Details</button>`;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function showEventDetails(eventId) {
+    // Faz uma solicitação GET para obter os detalhes do evento
+    const eventUrl = `http://localhost:5052/api/Events/${eventId}`;
+    axios.get(eventUrl)
+        .then(response => {
+            const event = response.data;
+
+            // Obtém os usuários registrados para o evento
+            const registeredUsersUrl = `http://localhost:5052/api/Events/${eventId}/RegisteredUsers`;
+            axios.get(registeredUsersUrl)
+                .then(response => {
+                    const registeredUsers = response.data;
+
+                    // Preenche o modal com os detalhes do evento e a lista de usuários registrados
+                    // ...
+
+                    // Abre o modal de edição usando o Bootstrap
+                    const modal = new bootstrap.Modal(EventDetailsModal);
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error fetching registered users:', error);
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching event details:', error);
+        });
+}

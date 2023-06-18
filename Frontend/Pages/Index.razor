@@ -78,11 +78,11 @@ Plataforma de Gestão de Eventos desenvolvida como parte integrante da unidade c
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">My Events</h5>
-            <table class="table" id="category-table">
+            <table class="table" id="my-events-table">
               <thead>
               <tr>
                 <th>Events</th>
-                <th>Número de Eventos</th>
+                <th>Details</th>
               </tr>
               </thead>
               <tbody>
@@ -96,6 +96,35 @@ Plataforma de Gestão de Eventos desenvolvida como parte integrante da unidade c
   </div>
 </div>
 
+<!-- Add Activity Modal -->
+<div class="modal fade" id="eventDetails" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Event Detail</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="event" class="form-label">Event</label>
+            <select class="form-control" id="event"></select>
+          </div>
+          <div class="mb-3">
+            <label for="activity" class="form-label">Activity</label>
+            <select class="form-control" id="activity"></select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="RegistrationActivity()">Registration Activity</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 @code
 {
   private string userName;
@@ -108,5 +137,6 @@ Plataforma de Gestão de Eventos desenvolvida como parte integrante da unidade c
     await JsRuntime.InvokeVoidAsync("getTotalParticipantsCount");
     await JsRuntime.InvokeVoidAsync("getTopEvents");
     await JsRuntime.InvokeVoidAsync("getCategoriesAndEventCounts");
+    await JsRuntime.InvokeVoidAsync("getMyEvents");
   }
 }
