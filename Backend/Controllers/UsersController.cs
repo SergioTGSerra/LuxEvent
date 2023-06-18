@@ -67,7 +67,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public async Task<ActionResult<User>> UpdateUser(Guid id, UserModel userModel)
         {
             try
