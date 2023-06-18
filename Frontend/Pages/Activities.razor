@@ -2,9 +2,12 @@
 <h3>Activities</h3>
 @inject IJSRuntime JsRuntime
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="openAddActivityModal()">
-  Add Activity
-</button>
+@if (userRole == "Admin" || userRole == "Organizer")
+{
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="openAddActivityModal()">
+    Add Activity
+  </button>
+}
 
 <table class="table">
   <thead>
@@ -85,6 +88,14 @@
 
 @code
 {
+  private string userRole;
+    
+  protected override async Task OnInitializedAsync()
+  {
+    await JsRuntime.InvokeVoidAsync("checkToken");
+    userRole = await JsRuntime.InvokeAsync<string>("getRole");
+  }
+  
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
     await JsRuntime.InvokeVoidAsync("getActivities");

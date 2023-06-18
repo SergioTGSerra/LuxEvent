@@ -75,3 +75,14 @@ function getRole(){
     const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     return role;
 }
+
+function getUID(){
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    const [, payloadBase64] = token.split('.');
+
+    const payloadJSON = atob(payloadBase64);
+    const payload = JSON.parse(payloadJSON);
+
+    const role = payload['UserId'];
+    return role;
+}

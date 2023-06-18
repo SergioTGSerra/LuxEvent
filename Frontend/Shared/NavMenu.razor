@@ -26,27 +26,27 @@
                 <span class="oi oi-person" aria-hidden="true"></span> Registration Activities
             </NavLink>
         </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="events">
+                <span class="oi oi-calendar" aria-hidden="true"></span> Events
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="tickets">
+                <span class="oi oi-bookmark" aria-hidden="true"></span> Ticket
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="activities">
+                <span class="oi oi-clock" aria-hidden="true"></span> Activities
+            </NavLink>
+        </div>
         
         @if (userRole == "Admin" || userRole == "Organizer")
         {
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="events">
-                    <span class="oi oi-calendar" aria-hidden="true"></span> Events
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
                 <NavLink class="nav-link" href="ticketTypes">
                     <span class="oi oi-menu" aria-hidden="true"></span> Ticket Types
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="tickets">
-                    <span class="oi oi-bookmark" aria-hidden="true"></span> Ticket
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="activities">
-                    <span class="oi oi-clock" aria-hidden="true"></span> Activities
                 </NavLink>
             </div>
             <div class="nav-item px-3" >
