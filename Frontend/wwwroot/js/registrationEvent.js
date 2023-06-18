@@ -42,7 +42,11 @@ function getRegistrationsEvents() {
                         eventCell.textContent = event.name;
                     })
                     .catch(error => {
-                        console.error('Error retrieving event:', error);
+                        if (error.response.status === 401 || error.response.status === 403) {
+                            alert("Não tem permissões para aceder a este recurso.");
+                        } else {
+                            alert(error.response.data.message);
+                        }
                     });
 
                 actionsCell.innerHTML = `<button class="btn btn-primary" onclick="deleteRegistrationEvent('${item.eventId}')">Unsubscribe</button>`;
@@ -50,7 +54,11 @@ function getRegistrationsEvents() {
         })
         .catch(error => {
             // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -77,8 +85,11 @@ async function RegistrationEvent() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Erro ao criar Registration Event:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getRegistrationsEvents()
 }
@@ -103,8 +114,11 @@ async function deleteRegistrationEvent(eventId) {
         console.log('Saiu com sucesso:', response.data);
 
     } catch (error) {
-        console.error('Erro ao sair do evento:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getRegistrationsEvents()
 }
@@ -133,7 +147,11 @@ function openAddRegistrationEvent() {
             });
         })
         .catch(error => {
-            console.error("Error while fetching events:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
     var addEventModal = new bootstrap.Modal(document.getElementById('registrationEventModal'));
     addEventModal.show();

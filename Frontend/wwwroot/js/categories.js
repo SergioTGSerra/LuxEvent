@@ -39,8 +39,11 @@ function getCategories() {
             });
         })
         .catch(error => {
-            // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -70,8 +73,11 @@ async function CreateCategory() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Erro ao criar categoria:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -97,8 +103,11 @@ async function deleteCategory(categoryId) {
         // Atualizar a tabela
         getCategories();
     } catch (error) {
-        console.error('Erro ao apagar categoria:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -135,8 +144,11 @@ async function updateCategory() {
         // Atualize a tabela de categorias
         getCategories();
     } catch (error) {
-        console.error('Erro ao atualizar categoria:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 

@@ -41,7 +41,11 @@ function getTicketTypes() {
         })
         .catch(error => {
             // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -71,8 +75,11 @@ async function createTicketType() {
         // Atualizar a tabela
         getTicketTypes();
     } catch (error) {
-        console.error('Erro ao criar tipo de ingresso:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -98,8 +105,11 @@ async function deleteTicketType(ticketTypeId) {
         // Atualizar a tabela
         getTicketTypes();
     } catch (error) {
-        console.error('Erro ao apagar tipo de ingresso:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -136,8 +146,11 @@ async function updateTicketType() {
         // Atualize a tabela de tipos de ingresso
         getTicketTypes();
     } catch (error) {
-        console.error('Erro ao atualizar tipo de ingresso:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 

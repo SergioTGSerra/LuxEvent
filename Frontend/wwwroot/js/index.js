@@ -23,7 +23,11 @@
         })
         .catch(error => {
             // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -52,7 +56,11 @@ function getTopEvents() {
             
         })
         .catch(error => {
-            console.error('Error fetching events:', error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -85,12 +93,20 @@ function getCategoriesAndEventCounts() {
                         eventCountCell.textContent = eventCountResponse.data;
                     })
                     .catch(error => {
-                        console.error('Error fetching event count:', error);
+                        if (error.response.status === 401 || error.response.status === 403) {
+                            alert("Não tem permissões para aceder a este recurso.");
+                        } else {
+                            alert(error.response.data.message);
+                        }
                     });
             });
         })
         .catch(error => {
-            console.error('Error fetching categories:', error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -118,7 +134,11 @@ function getMyEvents() {
             });
         })
         .catch(error => {
-            console.error('Error:', error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -143,10 +163,18 @@ function showEventDetails(eventId) {
                     modal.show();
                 })
                 .catch(error => {
-                    console.error('Error fetching registered users:', error);
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        alert("Não tem permissões para aceder a este recurso.");
+                    } else {
+                        alert(error.response.data.message);
+                    }
                 });
         })
         .catch(error => {
-            console.error('Error fetching event details:', error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }

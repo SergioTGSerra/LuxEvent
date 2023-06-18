@@ -46,8 +46,11 @@ function getUsers() {
             });
         })
         .catch(error => {
-            // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -87,8 +90,11 @@ async function createUser() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Erro ao criar usuário:', error);
-        alert('Erro ao criar usuário');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -117,8 +123,11 @@ async function deleteUser(userId) {
         // Atualizar a tabela de usuários
         getUsers();
     } catch (error) {
-        console.error('Erro ao excluir usuário:', error);
-        alert('Erro ao excluir usuário');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -163,8 +172,11 @@ async function updateUser() {
         // Atualize a tabela de usuários
         getUsers();
     } catch (error) {
-        console.error('Erro ao atualizar usuário:', error);
-        alert('Erro ao atualizar usuário');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 

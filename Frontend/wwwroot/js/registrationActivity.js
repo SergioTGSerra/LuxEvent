@@ -43,7 +43,11 @@ function getRegistrationsActivities() {
                         activityCell.textContent = activity.name;
                     })
                     .catch(error => {
-                        console.error('Error retrieving activity:', error);
+                        if (error.response.status === 401 || error.response.status === 403) {
+                            alert("Não tem permissões para aceder a este recurso.");
+                        } else {
+                            alert(error.response.data.message);
+                        }
                     });
 
                 // Obter o nome do evento com base no ID
@@ -54,7 +58,11 @@ function getRegistrationsActivities() {
                         eventCell.textContent = event.name;
                     })
                     .catch(error => {
-                        console.error('Error retrieving event:', error);
+                        if (error.response.status === 401 || error.response.status === 403) {
+                            alert("Não tem permissões para aceder a este recurso.");
+                        } else {
+                            alert(error.response.data.message);
+                        }
                     });
 
                 actionsCell.innerHTML = `<button class="btn btn-primary" onclick="deleteRegistrationActivity('${item.activityId}')">Unsubscribe</button>`;
@@ -62,7 +70,11 @@ function getRegistrationsActivities() {
         })
         .catch(error => {
             // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -89,8 +101,11 @@ async function RegistrationActivity() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Erro ao criar Registration Event:', error);
-        alert("Precisa de se inscrever no evento primeiro.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getRegistrationsActivities()
 }
@@ -115,8 +130,11 @@ async function deleteRegistrationActivity(activityId) {
         console.log('Saiu com sucesso:', response.data);
 
     } catch (error) {
-        console.error('Erro ao sair da activity:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getRegistrationsActivities()
 }
@@ -162,11 +180,19 @@ function openAddRegistrationActivity() {
                     });
                 })
                 .catch(error => {
-                    console.error("Error while fetching activities:", error);
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        alert("Não tem permissões para aceder a este recurso.");
+                    } else {
+                        alert(error.response.data.message);
+                    }
                 });
         })
         .catch(error => {
-            console.error("Error while fetching events:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 
     eventDropdown.addEventListener("change", () => {
@@ -186,7 +212,11 @@ function openAddRegistrationActivity() {
                 });
             })
             .catch(error => {
-                console.error("Error while fetching activities:", error);
+                if (error.response.status === 401 || error.response.status === 403) {
+                    alert("Não tem permissões para aceder a este recurso.");
+                } else {
+                    alert(error.response.data.message);
+                }
             });
     });
     

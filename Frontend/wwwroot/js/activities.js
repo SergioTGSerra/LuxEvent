@@ -87,8 +87,11 @@ async function CreateActivity() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Erro ao criar Activity:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getActivities()
 }
@@ -113,8 +116,11 @@ async function deleteActivity(activityId) {
         console.log('Activity apagada com sucesso:', response.data);
 
     } catch (error) {
-        console.error('Erro ao apagar Activity:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getActivities()
 }
@@ -150,7 +156,11 @@ async function updateActivity() {
 
     } catch (error) {
         console.error('Erro ao atualizar Activity:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
     getActivities()
 }
@@ -185,7 +195,11 @@ function openEditModalActivity(activityId, name, description) {
             });
         })
         .catch(error => {
-            console.error("Error while fetching events:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 
     // Define o atributo "data-activity-id" na modal de edição com o ID da atividade
@@ -220,7 +234,11 @@ function openAddActivityModal() {
             });
         })
         .catch(error => {
-            console.error("Error while fetching events:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
     var addEventModal = new bootstrap.Modal(document.getElementById('addEventModal'));
     addEventModal.show();

@@ -55,7 +55,11 @@ function RegisterUser(){
                 window.location.href = '/Login';
             })
             .catch(function (error) {
-                alert("Erro ao registar utilizador.")
+                if (error.response.status === 401 || error.response.status === 403) {
+                    alert("Não tem permissões para aceder a este recurso.");
+                } else {
+                    alert(error.response.data.message);
+                }
             });
     });
 }

@@ -24,8 +24,11 @@
             document.getElementById('userType').value = user.userType;
         })
         .catch(error => {
-            // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -63,6 +66,10 @@ function updateMyInfo() {
             alert('Utilizador atualizado com sucesso.');
         })
         .catch(error => {
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }

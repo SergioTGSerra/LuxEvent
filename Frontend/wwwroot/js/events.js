@@ -54,11 +54,19 @@ function getEvents() {
                     });
                 }))
                 .catch(error => {
-                    console.error('Error fetching user and category details:', error);
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        alert("Não tem permissões para aceder a este recurso.");
+                    } else {
+                        alert(error.response.data.message);
+                    }
                 });
         })
         .catch(error => {
-            console.error('Error fetching events:', error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -88,8 +96,11 @@ async function CreateEvent() {
         alert('Event created successfully!');
         getEvents();
     } catch (error) {
-        console.error('Error creating event:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -113,8 +124,11 @@ async function deleteEvent(eventId) {
         console.log('Event deleted successfully:', response.data);
         getEvents();
     } catch (error) {
-        console.error('Error deleting event:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -146,8 +160,11 @@ async function updateEvent() {
         console.log('Event updated successfully:', response.data);
         getEvents();
     } catch (error) {
-        console.error('Error updating event:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -195,11 +212,19 @@ function openEditModalEvents(eventId, eventName, eventDescription, eventLocation
                     modal.show();
                 })
                 .catch(error => {
-                    console.error("Error fetching users:", error);
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        alert("Não tem permissões para aceder a este recurso.");
+                    } else {
+                        alert(error.response.data.message);
+                    }
                 });
         })
         .catch(error => {
-            console.error("Error fetching categories:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -240,10 +265,18 @@ function openAddEventModal() {
                     modal.show();
                 })
                 .catch(error => {
-                    console.error("Error fetching users:", error);
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        alert("Não tem permissões para aceder a este recurso.");
+                    } else {
+                        alert(error.response.data.message);
+                    }
                 });
         })
         .catch(error => {
-            console.error("Error fetching categories:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }

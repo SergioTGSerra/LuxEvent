@@ -52,7 +52,11 @@ function getTickets() {
             });
         })
         .catch(error => {
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 
@@ -85,8 +89,11 @@ async function CreateTicket() {
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
     } catch (error) {
-        console.error('Erro ao criar ticket:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -113,8 +120,11 @@ async function deleteTicket(ticketId) {
         getTickets();
 
     } catch (error) {
-        console.error('Erro ao apagar ticket:', error);
-        alert("Não tem permissões suficientes para executar esta operação.");
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -144,8 +154,11 @@ async function UpdateTicket() {
 
         getTickets();
     } catch (error) {
-        console.error('Erro ao atualizar ticket:', error);
-        alert('Não tem permissões suficientes para executar esta operação.');
+        if (error.response.status === 401 || error.response.status === 403) {
+            alert("Não tem permissões para aceder a este recurso.");
+        } else {
+            alert(error.response.data.message);
+        }
     }
 }
 
@@ -171,7 +184,11 @@ function openAddTicketModal() {
             });
         })
         .catch(error => {
-            console.error("Erro ao buscar eventos:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 
     const ticketTypesDropdown = document.getElementById("ticketType");
@@ -186,7 +203,11 @@ function openAddTicketModal() {
             });
         })
         .catch(error => {
-            console.error("Erro ao buscar tipos de ticket:", error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 
     var addTicketModal = new bootstrap.Modal(document.getElementById('ticketModal'));
