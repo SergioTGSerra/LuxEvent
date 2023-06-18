@@ -63,12 +63,14 @@ public class RegistrationActivityService
     public async Task<List<RegistrationActivityModel>> GetRegistrationsActivitiesByUserAsync(Guid userId)
     {
         var registrationsActivities = await _dbContext.RegistrationsActivities
+            .Include(a => a.Activity) // Carrega a atividade relacionada
             .Where(a => a.UserId == userId)
             .ToListAsync();
 
         var registrationActivityModels = registrationsActivities.Select(a => new RegistrationActivityModel
         {
             ActivityId = a.ActivityId,
+            EventId = a.Activity != null ? a.Activity.EventId : null,
             // Outros campos que você desejar incluir
         }).ToList();
 
