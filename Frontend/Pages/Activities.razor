@@ -94,10 +94,6 @@
   {
     await JsRuntime.InvokeVoidAsync("checkToken");
     userRole = await JsRuntime.InvokeAsync<string>("getRole");
-  }
-  
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
     await JsRuntime.InvokeVoidAsync("getActivities");
   }
 }

@@ -14,7 +14,7 @@ function getActivities() {
     const table = document.querySelector('.table');
     const tableRows = table.querySelectorAll('tr');
 
-    // Começa a remoção a partir do segundo elemento (índice 1)
+    // Remove as linhas existentes
     for (let i = 1; i < tableRows.length; i++) {
         tableRows[i].remove();
     }
@@ -55,8 +55,11 @@ function getActivities() {
             });
         })
         .catch(error => {
-            // Em caso de erro, você pode lidar com o erro retornado
-            console.error(error);
+            if (error.response.status === 401 || error.response.status === 403) {
+                alert("Não tem permissões para aceder a este recurso.");
+            } else {
+                alert(error.response.data.message);
+            }
         });
 }
 

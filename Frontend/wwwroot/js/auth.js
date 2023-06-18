@@ -45,7 +45,7 @@ function RegisterUser(){
             name: name,
             email: email,
             password: password,
-            userType: "user"
+            userType: "User"
         };
 
         // Envia a solicitação usando o Axios
