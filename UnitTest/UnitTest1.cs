@@ -9,7 +9,7 @@ namespace UnitTest;
 public class Tests
 {
     private DbContextOptions<ES2DbContext> _dbContextOptions;
-
+        /*Esse método é executado antes de cada teste e é usado para configurar o ambiente de teste. Nele, estão sendo criadas opções de contexto de banco de dados em memória e, em seguida, está sendo usado um contexto de banco de dados para adicionar alguns usuários de teste ao banco de dados em memória.*/
         [SetUp]
         public void Setup()
         {
@@ -26,7 +26,8 @@ public class Tests
                 dbContext.SaveChanges();
             }
         }
-
+        
+        /*TearDown: Esse método é executado após cada teste e é usado para limpar o ambiente de teste. Nele, está sendo usado um contexto de banco de dados para excluir o banco de dados em memória.*/
         [TearDown]
         public void TearDown()
         {
@@ -37,6 +38,7 @@ public class Tests
             }
         }
 
+        /*GetUserById_ExistingId_ReturnsUser: Este é um teste para o método GetUserById da classe UserService. Ele verifica se o método retorna um usuário válido quando é fornecido um ID existente.*/
         [Test]
         public async Task GetUserById_ExistingId_ReturnsUser()
         {
@@ -55,6 +57,7 @@ public class Tests
             }
         }
 
+        /*GetUserById_NonExistingId_ReturnsNull: Este é um teste para o método GetUserById da classe UserService. Ele verifica se o método retorna nulo quando é fornecido um ID que não existe.*/
         [Test]
         public async Task GetUserById_NonExistingId_ReturnsNull()
         {
@@ -72,6 +75,7 @@ public class Tests
             }
         }
 
+        /*GetUserById_NonExistingId_ReturnsNull: Este é um teste para o método GetUserById da classe UserService. Ele verifica se o método retorna nulo quando é fornecido um ID que não existe.*/
         [Test]
         public async Task GetUserByUsernameAndPassword_ExistingCredentials_ReturnsUser()
         {
