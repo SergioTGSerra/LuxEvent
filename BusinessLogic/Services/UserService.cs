@@ -33,6 +33,20 @@ public class UserService
 
     public async Task CreateUser(User user)
     {
+        // Verificar se o nome de usuário já existe
+        var existingUsername = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
+        if (existingUsername != null)
+        {
+            throw new Exception("Username already exists.");
+        }
+
+        // Verificar se o email já existe
+        var existingEmail = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+        if (existingEmail != null)
+        {
+            throw new Exception("Email already exists.");
+        }
+
         user.Password = HashPassword(user.Password);
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
