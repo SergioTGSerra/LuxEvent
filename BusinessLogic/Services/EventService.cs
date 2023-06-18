@@ -44,4 +44,10 @@ public class EventService
             await _dbContext.SaveChangesAsync();
         }
     }
+    
+    public async Task<List<Event>> GetEventsByUser(Guid userId)
+    {
+        return await _dbContext.Events.Where(e => e.CreatedBy == userId).ToListAsync();
+    }
+
 }

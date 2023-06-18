@@ -15,6 +15,24 @@ namespace Backend.Controllers
         {
             _eventService = eventService;
         }
+        
+        [HttpGet("LoggedUser")]
+        public async Task<ActionResult<List<Event>>> GetEventsLoggedUser()
+        {
+            
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+            Guid.TryParse(userId, out Guid userIdGuid);
+
+            var events = await _eventService.GetEventsByUser(userIdGuid);
+
+            if (events == null || events.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return events;
+        }
 
         [HttpGet]
         [Authorize(Roles = "User,Organizer,Admin")]
