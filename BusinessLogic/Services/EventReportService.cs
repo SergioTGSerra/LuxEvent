@@ -18,10 +18,10 @@ public class EventReportService
         return await _dbContext.Events.CountAsync(e => e.CategoryId == categoryId);
     }
 
-    public async Task<IEnumerable<Event>> GetMostPopularEvents(int count)
+    public async Task<IEnumerable<Event>> GetMostPopularEvents()
     {
         return await _dbContext.Events.OrderByDescending(e => e.RegistrationsEvents.Count)
-            .Take(count)
+            .Take(10)
             .ToListAsync();
     }
 
