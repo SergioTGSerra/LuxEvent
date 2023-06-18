@@ -1,0 +1,35 @@
+@page "/MyPersonalInfo"
+<h3>My Personal Info</h3>
+@inject IJSRuntime JsRuntime
+
+<div class="mb-3">
+  <label for="name" class="form-label">Name</label>
+  <input type="text" class="form-control" id="name" aria-describedby="emailHelp">
+</div>
+<div class="mb-3">
+  <label for="username" class="form-label">Username</label>
+  <input type="text" class="form-control" id="username" aria-describedby="emailHelp" disabled="">
+</div>
+<div class="mb-3">
+  <label for="email" class="form-label">Email</label>
+  <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+</div>
+<div class="mb-3">
+  <label for="userType" class="form-label">User Type</label>
+  <input type="text" class="form-control" id="userType" aria-describedby="emailHelp" disabled="">
+</div>
+<div class="mb-3">
+  <label for="password" class="form-label">Change Password</label>
+  <input type="password" class="form-control" id="password">
+</div>
+<button type="submit" class="btn btn-primary" onclick="updateMyInfo()">Save</button>
+
+
+
+@code
+{
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    await JsRuntime.InvokeVoidAsync("getMyInfo");
+  }
+}
