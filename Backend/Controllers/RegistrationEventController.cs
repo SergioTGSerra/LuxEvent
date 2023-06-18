@@ -50,7 +50,7 @@ public class RegistrationsEventController : ControllerBase
         try
         {
             var registrationEvent = new RegistrationEventModel { EventId = id };
-            await _registrationEventService.DeleteRegistrationsEventAsync(registrationEvent, userIdGuid);
+            await _registrationEventService.DeleteRegistrationsEventAsync(id, userIdGuid);
             return NoContent();
         }
         catch (Exception ex)

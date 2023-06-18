@@ -78,6 +78,7 @@ builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<ActivityService>();
 builder.Services.AddScoped<TicketService>();
 builder.Services.AddScoped<RegistrationEventService>();
+builder.Services.AddScoped<RegistrationActivityService>();
 
 var app = builder.Build();
 

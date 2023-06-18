@@ -32,10 +32,10 @@ public class RegistrationEventService
         }
     }
 
-    public async Task DeleteRegistrationsEventAsync(RegistrationEventModel registrationEvent, Guid? userId)
+    public async Task DeleteRegistrationsEventAsync(Guid eventId, Guid? userId)
     {
         var registrationsEvent = await _dbContext.RegistrationsEvents
-            .FirstOrDefaultAsync(e => e.EventId == registrationEvent.EventId && e.UserId == userId);
+            .FirstOrDefaultAsync(e => e.EventId == eventId && e.UserId == userId);
 
         if (registrationsEvent != null)
         {
