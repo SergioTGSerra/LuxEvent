@@ -93,7 +93,9 @@ public partial class ES2DbContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
-            entity.Property(e => e.EventDate).HasColumnName("event_date");
+            entity.Property(e => e.EventDate)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("event_date");
             entity.Property(e => e.Location)
                 .HasMaxLength(255)
                 .HasColumnName("location");
@@ -142,11 +144,16 @@ public partial class ES2DbContext : DbContext
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
             entity.Property(e => e.EventId).HasColumnName("event_id");
+            entity.Property(e => e.TicketId).HasColumnName("ticket_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.Event).WithMany(p => p.RegistrationsEvents)
                 .HasForeignKey(d => d.EventId)
                 .HasConstraintName("registrations_events_event_id_fkey");
+
+            entity.HasOne(d => d.Ticket).WithMany(p => p.RegistrationsEvents)
+                .HasForeignKey(d => d.TicketId)
+                .HasConstraintName("registrations_events_ticket_id_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.RegistrationsEvents)
                 .HasForeignKey(d => d.UserId)
@@ -163,6 +170,7 @@ public partial class ES2DbContext : DbContext
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
             entity.Property(e => e.EventId).HasColumnName("event_id");
+            entity.Property(e => e.MaxParticipants).HasColumnName("max_participants");
             entity.Property(e => e.Price)
                 .HasPrecision(10, 2)
                 .HasColumnName("price");

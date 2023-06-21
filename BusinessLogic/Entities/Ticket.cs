@@ -13,7 +13,11 @@ public partial class Ticket
 
     public decimal Price { get; set; }
 
+    public int? MaxParticipants { get; set; }
+
     public virtual Event? Event { get; set; }
+
+    public virtual ICollection<RegistrationsEvent> RegistrationsEvents { get; set; } = new List<RegistrationsEvent>();
 
     public virtual TicketType? TicketType { get; set; }
 }

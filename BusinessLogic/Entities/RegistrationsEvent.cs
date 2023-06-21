@@ -11,7 +11,11 @@ public partial class RegistrationsEvent
 
     public Guid? EventId { get; set; }
 
+    public Guid? TicketId { get; set; }
+
     public virtual Event? Event { get; set; }
+
+    public virtual Ticket? Ticket { get; set; }
 
     public virtual User? User { get; set; }
 }
