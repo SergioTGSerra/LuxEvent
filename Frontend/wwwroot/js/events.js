@@ -36,6 +36,7 @@ function getEvents() {
                         const nameCell = newRow.insertCell();
                         const descriptionCell = newRow.insertCell();
                         const locationCell = newRow.insertCell();
+                        const dateCell = newRow.insertCell();
                         const maxParticipantsCell = newRow.insertCell();
                         const createdByCell = newRow.insertCell();
                         const categoryCell = newRow.insertCell();
@@ -44,12 +45,13 @@ function getEvents() {
                         nameCell.textContent = event.name;
                         descriptionCell.textContent = event.description;
                         locationCell.textContent = event.location;
+                        dateCell.textContent = event.eventDate;
                         maxParticipantsCell.textContent = event.maxParticipants;
                         createdByCell.textContent = user ? user.name : 'Unknown User';
                         categoryCell.textContent = category ? category.name : 'Unknown Category';
 
                         actionsCell.innerHTML =
-                            `<button class="btn btn-primary" onclick="openEditModalEvents('${event.id}', '${event.name}', '${event.description}', '${event.location}', '${event.maxParticipants}')">Edit</button>
+                            `<button class="btn btn-primary" onclick="openEditModalEvents('${event.id}', '${event.name}', '${event.description}', '${event.location}', '${event.eventDate}', '${event.maxParticipants}')">Edit</button>
                             <button class="btn btn-danger" onclick="deleteEvent('${event.id}')">Delete</button>`;
                     });
                 }))
@@ -74,6 +76,9 @@ async function CreateEvent() {
     const eventName = document.getElementById('eventNameInput').value;
     const eventDescription = document.getElementById('eventDescriptionInput').value;
     const eventLocation = document.getElementById('eventLocationInput').value;
+    const eventDateInput = document.getElementById('eventDateInput');
+    let eventDate = new Date(eventDateInput.value);
+    eventDate = eventDate.toISOString().slice(0, -1);
     const eventMaxParticipants = document.getElementById('eventMaxParticipantsInput').value;
     const eventCreatedBy = document.getElementById('eventCreatedByInput').value;
     const eventCategory = document.getElementById('eventCategoryInput').value;
@@ -88,6 +93,7 @@ async function CreateEvent() {
             name: eventName,
             description: eventDescription,
             location: eventLocation,
+            eventDate: eventDate,
             maxParticipants: eventMaxParticipants,
             createdBy: eventCreatedBy,
             categoryId: eventCategory
@@ -137,6 +143,9 @@ async function updateEvent() {
     const eventName = document.getElementById('editEventNameInput').value;
     const eventDescription = document.getElementById('editEventDescriptionInput').value;
     const eventLocation = document.getElementById('editEventLocationInput').value;
+    const eventDateInput = document.getElementById('editEventDateInput');
+    let eventDate = new Date(eventDateInput.value);
+    eventDate = eventDate.toISOString().slice(0, -1);
     const eventMaxParticipants = document.getElementById('editEventMaxParticipantsInput').value;
     const eventCreatedBy = document.getElementById('eventEditCreatedByInput').value;
     const eventCategory = document.getElementById('eventEditCategoryInput').value;
@@ -152,6 +161,7 @@ async function updateEvent() {
             name: eventName,
             description: eventDescription,
             location: eventLocation,
+            eventDate: eventDate,
             maxParticipants: eventMaxParticipants,
             createdBy: eventCreatedBy,
             categoryId: eventCategory

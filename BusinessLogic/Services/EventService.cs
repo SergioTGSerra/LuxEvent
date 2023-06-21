@@ -28,7 +28,7 @@ public class EventService
         _dbContext.Events.Add(newEvent);
         await _dbContext.SaveChangesAsync();
     }
-
+    
     public async Task UpdateEvent(Event updatedEvent)
     {
         _dbContext.Entry(updatedEvent).State = EntityState.Modified;
