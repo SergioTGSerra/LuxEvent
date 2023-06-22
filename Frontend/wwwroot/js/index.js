@@ -145,7 +145,17 @@ function getMyEvents() {
 function showEventDetails(eventId) {
     // Faz uma solicitação GET para obter os detalhes do evento
     const eventUrl = `http://localhost:5052/api/Events/${eventId}`;
-    axios.get(eventUrl)
+
+    // Obtenha o token do cookie
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+
+
+    // Configuração do cabeçalho para incluir o token
+    const headers = {
+        Authorization: `Bearer ${token}`
+    };
+    
+    axios.get(eventUrl, { headers })
         .then(response => {
             const event = response.data;
 
